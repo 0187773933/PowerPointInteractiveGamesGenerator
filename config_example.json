@@ -1,0 +1,29 @@
+{
+	"parser": {
+		"our_background_textbox_rgb": [ 68 , 114 , 196 ] ,
+		"our_background_textbox_hex": "0070C0" ,
+		"maximum_textbox_height": 503732 ,
+		"slide_master_width": 12192000 ,
+		"slide_master_height": 6858000 ,
+		"exported_image_dpi": 144 ,
+		"exported_width": 1920 ,
+		"exported_height": 1080 ,
+		"strict_mode": false
+	} ,
+	"image_upload_server": {
+		"username": "asdf" ,
+		"password": "asdf" ,
+		"key": "some_api_key" ,
+		"endpoint_url": "https://example.com/images/upload"
+	} ,
+	"html": {
+		"base_hosted_url": "https://example.com/hosted/Interactive" ,
+		"image_scale_percentage": 60 ,
+		"unanswered_color": "red" ,
+		"answered_color": "#13E337" ,
+		"text_color": "white" ,
+		"text_font": "17px Arial" ,
+		"text_x_offset_factor": 2 ,
+		"text_y_offset_factor": 3
+	}
+}

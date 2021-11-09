@@ -1,0 +1,180 @@
+import sys
+from pprint import pprint
+from pptx import Presentation
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
+from pptx.util import Inches, Pt
+from pptx.oxml import parse_xml
+from pptx.dml.color import _NoneColor
+
+# CONFIG Variables
+OUR_BACKGROUND_TEXTBOX_RGB = [ 68 , 114 , 196 ]
+OUR_BACKGROUND_TEXTBOX_HEX = "0070C0"
+MAXIMUM_TEXTBOX_HEIGHT = 503732
+
+# GLOBAL Variables
+PARSED_TEXT_BOXES = []
+PARSED_BLANK_BOXES = []
+
+# https://stackoverflow.com/a/24290026
+def enumerate2( xs , start=0 , step=1):
+	for x in xs:
+		yield ( start , x )
+		start += step
+
+def is_rectangular( shape ):
+	if shape.width > shape.height:
+		return True
+	return False
+
+def is_accepted_rectangular_form( shape ):
+	if is_rectangular( shape ) == False:
+		return False
+	if shape.height > MAXIMUM_TEXTBOX_HEIGHT:
+		return False
+	return True
+
+def get_fill_type( fill ):
+	if hasattr( shape.fill.type , "real" ) == False:
+		return False
+	fill_type = shape.fill.type
+	if fill_type == 1:
+		return "solid"
+	elif fill_type == 2:
+		return "patterned"
+	elif fill_type == 3:
+		return "gradient"
+	elif fill_type == 4:
+		return "textured"
+	elif fill_type == 5:
+		return "background"
+	elif fill_type == 6:
+		return "picture"
+	return False
+
+def get_fill_color( shape ):
+	if hasattr( shape , "fill" ) == False:
+		return False
+	fill_type = get_fill_type( shape.fill )
+	if fill_type == False:
+		return False
+	if fill_type != "solid":
+		return False
+	color = shape.fill.fore_color
+	result = {}
+	if not isinstance( color._color , _NoneColor ):
+		if hasattr( color, "rgb" ):
+			result[ "rgb" ] = color.rgb
+		if hasattr( color , "brightness" ):
+			result[ "brightness" ] = color.brightness
+		if hasattr( color , "color_type" ):
+			result[ "color_type" ] = color.color_type
+		if hasattr( color , "theme_color" ):
+			result[ "theme_color" ] = color.theme_color
+		if hasattr( color , "theme_color" ):
+			result[ "theme_color" ] = "{}".format( color.theme_color )
+	return result
+
+def validate_correct_color( rgb_object ):
+	if str( rgb_object ) == OUR_BACKGROUND_TEXTBOX_HEX:
+		return True
+	elif isinstance( rgb_object , tuple ):
+		if rgb_object[ 0 ] == OUR_BACKGROUND_TEXTBOX_RGB[ 0 ]:
+			if rgb_object[ 1 ] == OUR_BACKGROUND_TEXTBOX_RGB[ 1 ]:
+				if rgb_object[ 2 ] == OUR_BACKGROUND_TEXTBOX_RGB[ 2 ]:
+					return True
+	return False
+
+def validate_text_box( shape ):
+	# 1.) Validate Background Color Matches "our" Textboxes
+	# NOTE: YOU HAVE TO USE SHAPE FILL BUTTON , idk man
+	fill_color = get_fill_color( shape )
+	if fill_color == False:
+		return False
+	if "rgb" not in fill_color:
+		return False
+	if validate_correct_color( fill_color[ "rgb" ] ) == False:
+		return False
+
+	# 2.) Validate There is Text In the Box
+	if hasattr( shape , "text_frame" ) == False:
+		return False
+	if len( shape.text_frame.text ) < 1:
+		return False
+
+	# 3.) Validate Shape is "rEcTanGULar" and appropriate size
+	# doesn't do a very good job, but 99% it works
+	if is_accepted_rectangular_form( shape ) == False:
+		return False
+	return True
+
+def validate_blank_box( shape ):
+	# 1.) Validate Background Color Matches "our" Textboxes
+	fill_color = get_fill_color( shape )
+	if fill_color == False:
+		return False
+	if "rgb" not in fill_color:
+		return False
+	if validate_correct_color( fill_color[ "rgb" ] ) == False:
+		return False
+
+	# 2.) Validate There is Text In the Box
+	if hasattr( shape , "text_frame" ) == False:
+		return False
+	if len( shape.text_frame.text ) > 0:
+		return False
+
+	# 3.) Validate Shape is "rEcTanGULar" and appropriate size
+	# doesn't do a very good job, but 99% it works
+	if is_accepted_rectangular_form( shape ) == False:
+		return False
+	return True
+
+# This assumes that every textbox has a unique positon , across all slides
+def find_matching_blank_box( text_box ):
+	for index , blank_box in enumerate( PARSED_BLANK_BOXES ):
+		if text_box[ "top" ] == blank_box[ "top" ]:
+			if text_box[ "left" ] == blank_box[ "left" ]:
+				if text_box[ "height" ] == blank_box[ "height" ]:
+					if text_box[ "width" ] == blank_box[ "width" ]:
+						return blank_box
+	return False
+
+# https://python-pptx.readthedocs.io/en/latest/api/shapes.html
+# https://stackoverflow.com/questions/54692768/python-pptx-read-font-color
+# https://github.com/scanny/python-pptx/blob/master/pptx/enum/dml.py
+# https://github.com/BlenderCN/Learnbgame/blob/b6aabd1f331dc08915678f6e8a7706f8ac02ef46/All_In_One/addons/Presentation-master/powerPointConverter.py
+
+# ok , so we don't have to do this bull shit validation of matching text_filled boxes with blank boxes
+# we supposedly have a powerpoint library , just duplicate the slides without text while we are here
+# easier for everyone
+# then automte export of slides to images ????
+# https://github.com/8BitAce/PPExport/blob/master/ppexport.py
+# otherwise it doesn't make sense to go back and forth.
+# so if you don't automate export of images , you might as well leave in the validation of double boxes
+# could use applescript as fallback for windows comtypes package
+# https://apple.stackexchange.com/questions/350221/powerpoints-save-as-pdf-in-applescript-results-in-print-job
+
+p = Presentation( sys.argv[ 1 ] )
+for slide_index , slide in enumerate( p.slides ):
+	for shape_index , shape in enumerate( slide.shapes ):
+		if validate_text_box( shape ):
+			PARSED_TEXT_BOXES.append({
+				"text": shape.text_frame.text ,
+				"slide_number": ( slide_index + 1 ) ,
+				"element_number": ( shape_index + 1 ) ,
+				"top": shape.top ,
+				"left": shape.left ,
+				"height": shape.height ,
+				"width": shape.width ,
+			})
+			p.slides.insert( index , item )
+
+for slide_index , slide in enumerate( p.slides ):
+	nvm
+
+p.save( "test2.pptx" )
+
+## Now is the hard part of tyring to figure out the coordinate space of the exported image , and then matching it to whatever the fuck an image-map is in HTML
+## If you can do this , then we can automate the whole image mapping stuff
