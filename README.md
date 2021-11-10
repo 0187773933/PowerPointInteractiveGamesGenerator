@@ -16,10 +16,11 @@
 	- Caveats :
 
 		- The hex "fill color" of the textboxes must match that in config
+		- it is easy to accidentally move a text box when deleting the text for the second slide in each question
 
 	- Example of Slide 1 and Slide 2 for "Question 1"
 
-<img src="https://39363.org/IMAGE_BUCKET/1636525166177-241760869.png" style="zoom:37%;" />
+<img src="https://39363.org/IMAGE_BUCKET/1636525166177-241760869.png" style="zoom:27%;" />
 
 2. Export All Slides as JPEG
 3. `cp config_example.json config.json`
