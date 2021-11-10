@@ -150,6 +150,7 @@ def build_typing_html( options ):
 def generate( config ):
 	if "images" not in config:
 		sys.exit( 1 )
+	pprint( config )
 
 	input_config_path = Path( sys.argv[1] )
 	output_base_dir =  config[ "output_base_dir" ]
@@ -162,7 +163,7 @@ def generate( config ):
 	drag_and_drop_base_dir.mkdir( parents=True , exist_ok=True )
 	typing_base_dir =  config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
 	typing_base_dir.mkdir( parents=True , exist_ok=True )
-	print(  config[ "output_base_dir" ].absolute() )
+	# print( config[ "output_base_dir" ].absolute() )
 
 	names = [ x[0] for x in config["images"] ]
 	next_names = []
@@ -188,19 +189,25 @@ def generate( config ):
 		# image_map_raw = base64.b64decode( question[ 2 ] ).decode( "utf-8" ).split( "\n" )
 		# image_map = [ image_map_raw[ 0 ] , ...[ f"\t\t\t{x}" for x in image_map_raw[ 1:-2 ] ] , f"\t\t{image_map_raw[-1]}" ]
 		# image_map = "\n".join( image_map )
-		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
-		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
-		print( next_challenge_drag_and_drop_url )
+
+		# next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
+		# next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
+		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}.html'
+		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}.html'
+
+		# print( next_challenge_drag_and_drop_url )
 		options = config
 		options[ "title" ] = names[index]
 		options[ "image_map" ] = question[ 2 ]
 		options[ "image_source_url" ] = question[ 1 ]
 		options[ "next_challenge_url" ] = next_challenge_drag_and_drop_url
 
-		drag_and_drop_output_path = drag_and_drop_base_dir.joinpath( f"{index_prefix}-{names[index]}.html" )
+		# drag_and_drop_output_path = drag_and_drop_base_dir.joinpath( f"{index_prefix}-{names[index]}.html" )
+		drag_and_drop_output_path = drag_and_drop_base_dir.joinpath( f"{index_prefix}.html" )
 		drag_and_drop_html = build_drag_and_drop_html( options )
 		write_text( str( drag_and_drop_output_path ) , [ drag_and_drop_html ] )
 
 		typing_html = build_typing_html( options )
-		typing_output_path = typing_base_dir.joinpath( f"{index_prefix}-{names[index]}.html" )
+		# typing_output_path = typing_base_dir.joinpath( f"{index_prefix}-{names[index]}.html" )
+		typing_output_path = typing_base_dir.joinpath( f"{index_prefix}.html" )
 		write_text( str( typing_output_path ) , [ typing_html ] )

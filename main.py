@@ -12,6 +12,7 @@ if __name__ == "__main__":
 	input_powerpoint_path = Path( sys.argv[ 1 ] )
 	config = utils.read_json( sys.argv[ 2 ] )
 	slide_image_paths = utils.get_slide_image_paths( sys.argv[ 1 ] )
+	print( slide_image_paths )
 
 	# 1.) Compute HTML Image Map Locations
 	image_maps_in_slides = compute_image_maps.compute( sys.argv[ 1 ] , config[ "parser" ] )
@@ -25,10 +26,9 @@ if __name__ == "__main__":
 
 		# 1.) Upload to Image Hosting Location
 		uploaded_url = image_uploader.upload( str( slide_image_paths[ slide_index ].absolute() ) , config[ "image_upload_server" ] )
-		print( uploaded_url )
 
 		image_objects.append([
-			f"Slide - {str( slide_index ).zfill( 3 )}" ,
+			f"Slide" ,
 			uploaded_url ,
 			image_maps_in_slide
 		])

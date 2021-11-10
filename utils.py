@@ -24,5 +24,6 @@ def get_slide_image_paths( power_point_file ):
 	FilesPosixInBaseDirectory = BaseDirectoryPosixPath.glob( '*' )
 	FilesPosixInBaseDirectory = [ x for x in FilesPosixInBaseDirectory if x.is_file() ]
 	FilesPosixInBaseDirectory = [ x for x in FilesPosixInBaseDirectory if x.suffix in ALLOWED_EXTENSIONS ]
-	FilesPosixInBaseDirectory = humansorted( FilesPosixInBaseDirectory )
+	# FilesPosixInBaseDirectory = humansorted( FilesPosixInBaseDirectory )
+	FilesPosixInBaseDirectory = [ BaseDirectoryPosixPath.joinpath( f"Slide{x}.jpeg" ) for x in range( 1 , len( FilesPosixInBaseDirectory ) + 1 ) ]
 	return FilesPosixInBaseDirectory

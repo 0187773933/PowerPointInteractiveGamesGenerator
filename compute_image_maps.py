@@ -315,6 +315,8 @@ def compute( input_path , options ):
 	shape_objects_in_slides = get_shape_objects( input_path )
 	image_maps = []
 	for slide_index , shape_objects in enumerate( shape_objects_in_slides ):
+		if len( shape_objects ) < 1:
+			continue
 		html_map_string = f'<map name="image-map">\n'
 		for index , shape_object in enumerate( shape_objects ):
 			# print( f'\n{shape_object[ 0 ][ "text" ]} ===' )
