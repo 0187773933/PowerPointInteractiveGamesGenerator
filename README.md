@@ -1,6 +1,5 @@
 # PowerPoint Interactive Games Generator
-
-### Generates DragAndDrop and Typing Prompt Games from Placeholder Textboxes
+> Generates DragAndDrop and Typing Prompt Games from Placeholder Textboxes
 
 - The background color for placeholder rectangles must match the hex string in config.json
 - Every slide to be generated needs to be in a pair ( SlideWithTextBoxesFilled , SlideWithBlankTextBoxes )
