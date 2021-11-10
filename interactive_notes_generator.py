@@ -156,10 +156,11 @@ def generate( config ):
 		shutil.rmtree(  config[ "output_base_dir" ] )
 	except Exception as e:
 		pass
+	cached_title = config["title"] # no idea , somehow somebody changes it
 	config[ "output_base_dir" ].mkdir( parents=True , exist_ok=True )
 	drag_and_drop_base_dir = config[ "output_base_dir" ].joinpath( "DragAndDrop" , config["title"] )
 	drag_and_drop_base_dir.mkdir( parents=True , exist_ok=True )
-	typing_base_dir =  config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
+	typing_base_dir = config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
 	typing_base_dir.mkdir( parents=True , exist_ok=True )
 	# print( config[ "output_base_dir" ].absolute() )
 
@@ -190,8 +191,8 @@ def generate( config ):
 
 		# next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
 		# next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
-		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}.html'
-		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}.html'
+		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{cached_title}/{next_index_prefix}.html'
+		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{cached_title}/{next_index_prefix}.html'
 
 		# print( next_challenge_drag_and_drop_url )
 		options = config
