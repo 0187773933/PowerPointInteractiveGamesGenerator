@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Slide</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Olfactory Nerve" title="Olfactory Nerve" href="" coords="233.21669291338583,118.95653543307087,505.5647244094488,73.5651968503937" shape="rect">
+			<area target="" alt="Optic Nerve" title="Optic Nerve" href="" coords="184.69559055118108,199.71622047244097,395.999842519685,154.3248818897638" shape="rect">
+			<area target="" alt="Oculomotor Nerve" title="Oculomotor Nerve" href="" coords="156.52173228346456,286.1544881889764,465.02913385826776,240.76314960629924" shape="rect">
+			<area target="" alt="Trochlear Nerve" title="Trochlear Nerve" href="" coords="172.17385826771653,344.60818897637796,443.03622047244096,299.2168503937008" shape="rect">
+			<area target="" alt="Trigeminal Nerve" title="Trigeminal Nerve" href="" coords="172.17385826771653,449.71952755905517,455.5579527559055,404.328188976378" shape="rect">
+			<area target="" alt="Abducens Nerve" title="Abducens Nerve" href="" coords="175.38425196850392,506.6686614173229,458.7683464566929,461.2773228346457" shape="rect">
+			<area target="" alt="Facial Nerve" title="Facial Nerve" href="" coords="184.69559055118108,595.8562204724409,402.2606299212598,550.4648818897638" shape="rect">
+			<area target="" alt="Vestibulocochlear Nerve" title="Vestibulocochlear Nerve" href="" coords="10.956535433070867,659.2176377952756,400.69543307086616,613.8262992125984" shape="rect">
+			<area target="" alt="Glossopharyngeal Nerve" title="Glossopharyngeal Nerve" href="" coords="21.913070866141734,759.5623622047244,426.92771653543304,714.1710236220473" shape="rect">
+			<area target="" alt="Vagus Nerve" title="Vagus Nerve" href="" coords="184.69559055118108,847.5851968503936,411.46362204724403,802.1938582677165" shape="rect">
+			<area target="" alt="Hypoglossal Nerve" title="Hypoglossal Nerve" href="" coords="156.52173228346456,917.6900787401574,475.9855118110237,872.2987401574803" shape="rect">
+			<area target="" alt="Accessory Nerve" title="Accessory Nerve" href="" coords="172.17385826771653,989.360157480315,459.37653543307084,943.9688188976379" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1636512339766-468740936.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/Quiz-5/002.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

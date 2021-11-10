@@ -75,7 +75,7 @@ def build_drag_and_drop_html( options ):
 		window.randomize_order = true;
 		window.auto_advance = true;
 		let interactive_drag_and_drop_script = document.createElement( "script" );
-		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]["url"]}?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]}?v=" + ( new Date() ).getTime() );
 		interactive_drag_and_drop_script.onload = load;
 		document.head.appendChild( interactive_drag_and_drop_script );
 	</script>
@@ -138,7 +138,7 @@ def build_typing_html( options ):
 		window.randomize_order = true;
 		window.auto_advance = true;
 		let interactive_typing_script = document.createElement( "script" );
-		interactive_typing_script.setAttribute( "src" , "{options["cdn"]["interactive_typing_js"]["url"]}?v=" + ( new Date() ).getTime() );
+		interactive_typing_script.setAttribute( "src" , "{options["cdn"]["interactive_typing_js"]}?v=" + ( new Date() ).getTime() );
 		interactive_typing_script.onload = load;
 		document.head.appendChild( interactive_typing_script );
 	</script>

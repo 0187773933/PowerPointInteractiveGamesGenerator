@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Slide</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Levator Palpebrae Superioris" title="Levator Palpebrae Superioris" href="" coords="317.7390551181103,507.13055118110236,773.2173228346458,460.1740157480315" shape="rect">
+			<area target="" alt="Lateral Rectus" title="Lateral Rectus" href="" coords="489.9130708661417,589.0436220472441,731.4782677165354,542.0870866141732" shape="rect">
+			<area target="" alt="Superior Rectus" title="Superior Rectus" href="" coords="489.9130708661417,656.1305511811024,755.4782677165354,609.1740157480316" shape="rect">
+			<area target="" alt="Medial Rectus" title="Medial Rectus" href="" coords="1314.1737007874015,588.5217322834645,1580.8696062992126,541.5651968503937" shape="rect">
+			<area target="" alt="Superior Oblique" title="Superior Oblique" href="" coords="1314.1735433070867,653.5218897637794,1602.2609448818898,606.5653543307086" shape="rect">
+			<area target="" alt="Trochlea" title="Trochlea" href="" coords="1314.1735433070867,726.7174803149607,1480.6957480314961,679.7609448818898" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1636512341528-714910380.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/Slide/005.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

@@ -12,7 +12,6 @@
 5. run `python3 main.py "./examples/Quiz 5.pptx" config.json`
 6. Upload Generated HTML files to File Server
 
-
 ### Todo
 - add back button
 - auto adjust image scale percentage based on viewport size
