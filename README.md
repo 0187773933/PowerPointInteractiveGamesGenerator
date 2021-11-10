@@ -42,3 +42,4 @@
 - adjust bootstrap columns for drag and drop based on length of longest word
 - auto generate blank slides
 - fix accidental double drop on correct answer overcount
+- wrap into docker server , upload zip of .pptx and images , download zip of html files
