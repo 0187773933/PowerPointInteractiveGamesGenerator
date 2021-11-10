@@ -34,7 +34,6 @@ BOOTSTRAP_CSS_INTEGRITY = ""
 BOOTSTRAP_JS_INTEGRITY = ""
 JQUERY_UI_JS_INTEGRITY = ""
 
-# <script src="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"></script>
 def build_drag_and_drop_html( options ):
 	return f'''<!DOCTYPE html>
 <html>
@@ -83,7 +82,6 @@ def build_drag_and_drop_html( options ):
 </body>
 </html>'''
 
-# <script src="https://39363.org/CDN/NOTES/interactive_typing.js"></script>
 def build_typing_html( options ):
 	return f'''<!DOCTYPE html>
 <html>
