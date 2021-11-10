@@ -196,7 +196,7 @@ def generate( config ):
 
 		# print( next_challenge_drag_and_drop_url )
 		options = config
-		options[ "title" ] = names[index]
+		options[ "title" ] = index_prefix
 		options[ "image_map" ] = question[ 2 ]
 		options[ "image_source_url" ] = question[ 1 ]
 		options[ "next_challenge_url" ] = next_challenge_drag_and_drop_url
