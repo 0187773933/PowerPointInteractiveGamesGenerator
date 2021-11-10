@@ -42,11 +42,11 @@ def build_drag_and_drop_html( options ):
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{options["title"]}</title>
-	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="{JQUERY_UI_CSS_INTEGRITY}" >
-	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity="{JQUERY_JS_INTEGRITY}"></script>
-	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="{BOOTSTRAP_CSS_INTEGRITY}">
-	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity="{BOOTSTRAP_JS_INTEGRITY}"></script>
-	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="{JQUERY_UI_JS_INTEGRITY}" ></script>
+	<link rel="stylesheet" href="{options["cdn"]["jquery_ui_css"]["url"]}" integrity="{options["cdn"]["jquery_ui_css"]["integrity"]}" >
+	<script src="{options["cdn"]["jquery_js"]["url"]}" integrity="{options["cdn"]["jquery_js"]["integrity"]}"></script>
+	<link rel="stylesheet" href="{options["cdn"]["bootstrap_css"]["url"]}" integrity="{options["cdn"]["bootstrap_css"]["integrity"]}">
+	<script src="{options["cdn"]["bootstrap_bundle"]["url"]}" integrity="{options["cdn"]["bootstrap_bundle"]["integrity"]}"></script>
+	<script src="{options["cdn"]["jquery_ui_js"]["url"]}" integrity="{options["cdn"]["jquery_ui_js"]["integrity"]}" ></script>
 </head>
 <body>
 	<div id="label-container">
@@ -76,7 +76,7 @@ def build_drag_and_drop_html( options ):
 		window.randomize_order = true;
 		window.auto_advance = true;
 		let interactive_drag_and_drop_script = document.createElement( "script" );
-		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]["url"]}?v=" + ( new Date() ).getTime() );
 		interactive_drag_and_drop_script.onload = load;
 		document.head.appendChild( interactive_drag_and_drop_script );
 	</script>
@@ -91,11 +91,11 @@ def build_typing_html( options ):
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{options["title"]}</title>
-	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="{JQUERY_UI_CSS_INTEGRITY}" >
-	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity="{JQUERY_JS_INTEGRITY}"></script>
-	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="{BOOTSTRAP_CSS_INTEGRITY}">
-	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity="{BOOTSTRAP_JS_INTEGRITY}"></script>
-	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="{JQUERY_UI_JS_INTEGRITY}" ></script>
+	<link rel="stylesheet" href="{options["cdn"]["jquery_ui_css"]["url"]}" integrity="{options["cdn"]["jquery_ui_css"]["integrity"]}" >
+	<script src="{options["cdn"]["jquery_js"]["url"]}" integrity="{options["cdn"]["jquery_js"]["integrity"]}"></script>
+	<link rel="stylesheet" href="{options["cdn"]["bootstrap_css"]["url"]}" integrity="{options["cdn"]["bootstrap_css"]["integrity"]}">
+	<script src="{options["cdn"]["bootstrap_bundle"]["url"]}" integrity="{options["cdn"]["bootstrap_bundle"]["integrity"]}"></script>
+	<script src="{options["cdn"]["jquery_ui_js"]["url"]}" integrity="{options["cdn"]["jquery_ui_js"]["integrity"]}" ></script>
 </head>
 <body>
 	<div id="label-container">
@@ -140,7 +140,7 @@ def build_typing_html( options ):
 		window.randomize_order = true;
 		window.auto_advance = true;
 		let interactive_typing_script = document.createElement( "script" );
-		interactive_typing_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_typing.js?v=" + ( new Date() ).getTime() );
+		interactive_typing_script.setAttribute( "src" , "{options["cdn"]["interactive_typing_js"]["url"]}?v=" + ( new Date() ).getTime() );
 		interactive_typing_script.onload = load;
 		document.head.appendChild( interactive_typing_script );
 	</script>

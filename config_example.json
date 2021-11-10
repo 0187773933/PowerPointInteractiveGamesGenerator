@@ -18,6 +18,30 @@
 	} ,
 	"html": {
 		"base_hosted_url": "https://example.com/hosted/Interactive" ,
+		"cdn": {
+			"jquery_ui_css": {
+				"url": "https://example.com/CDN/jquery-ui.css" ,
+				"integrity": "sha256-RPilbUJ5F7X6DdeTO6VFZ5vl5rO5MJnmSk4pwhWfV8A="
+			} ,
+			"jquery_ui_js": {
+				"url": "https://example.com/CDN/jquery-ui.min.js" ,
+				"integrity": "sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+			} ,
+			"jquery_js": {
+				"url": "https://example.com/CDN/jquery-3.6.0.min.js" ,
+				"integrity": "sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			} ,
+			"bootstrap_css": {
+				"url": "https://example.com/CDN/bootstrap.min.css" ,
+				"integrity": "sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+			} ,
+			"bootstrap_bundle": {
+				"url": "https://example.com/CDN/bootstrap.bundle.min.js" ,
+				"integrity": "sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+			} ,
+			"interactive_typing_js": "https://example.com/CDN/interactive_typing.js" ,
+			"interactive_drag_and_drop_js": "https://example.com/CDN/interactive_drag_and_drop.js"
+		} ,
 		"image_scale_percentage": 60 ,
 		"unanswered_color": "red" ,
 		"answered_color": "#13E337" ,
