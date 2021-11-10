@@ -159,7 +159,7 @@ def validate_blank_box( shape ):
 		return False
 	return True
 
-# This assumes that every textbox has a unique positon , across all slides
+# This assumes that every textbox has a unique position , across all slides
 def find_matching_blank_box( text_box , PARSED_BLANK_BOXES ):
 	for index , blank_box in enumerate( PARSED_BLANK_BOXES ):
 		if text_box[ "top" ] == blank_box[ "top" ]:
