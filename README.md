@@ -28,9 +28,17 @@
 5. run `python3 main.py "./examples/Quiz 5.pptx" config.json`
 6. Upload Generated HTML files to File Server
 
+### Result
+
+![](https://39363.org/IMAGE_BUCKET/1636526211492-992772358.png)
+
+- https://39363.org/CDN/MISC/ExampleDragAndDrop.html
+- https://39363.org/CDN/MISC/ExampleTyping.html
+
 ### Todo
 
 - add back button
 - auto adjust image scale percentage based on viewport size
 - adjust bootstrap columns for drag and drop based on length of longest word
 - auto generate blank slides
+- fix accidental double drop on correct answer overcount
