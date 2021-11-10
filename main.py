@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
 	# 3.) Generate Interactive Games
 	html_options = {
-		"title": input_powerpoint_path.stem ,
+		"title": input_powerpoint_path.stem.replace( " " , "-" ) ,
 		"images": image_objects ,
 		"output_base_dir": input_powerpoint_path.parent.joinpath( f"{input_powerpoint_path.stem} - Interactive" ) ,
 	}
