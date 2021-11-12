@@ -206,6 +206,7 @@ def generate( config ):
 		drag_and_drop_html = build_drag_and_drop_html( options )
 		write_text( str( drag_and_drop_output_path ) , [ drag_and_drop_html ] )
 
+		options[ "next_challenge_url" ] = next_challenge_typing_url
 		typing_html = build_typing_html( options )
 		# typing_output_path = typing_base_dir.joinpath( f"{index_prefix}-{names[index]}.html" )
 		typing_output_path = typing_base_dir.joinpath( f"{index_prefix}.html" )
