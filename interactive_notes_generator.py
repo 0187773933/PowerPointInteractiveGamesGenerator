@@ -150,7 +150,7 @@ def generate( config ):
 		sys.exit( 1 )
 	pprint( config )
 
-	input_config_path = Path( sys.argv[1] )
+	# input_config_path = Path( sys.argv[1] )
 	output_base_dir =  config[ "output_base_dir" ]
 	try:
 		shutil.rmtree(  config[ "output_base_dir" ] )
