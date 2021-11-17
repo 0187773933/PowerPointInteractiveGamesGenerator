@@ -15,6 +15,10 @@ if __name__ == "__main__":
 
 	# 1.) Compute HTML Image Map Locations
 	image_maps_in_slides = compute_image_maps.compute( sys.argv[ 1 ] , config[ "parser" ] )
+	# print( len( image_maps_in_slides ) )
+	# for index , image_map in enumerate( image_maps_in_slides ):
+	# 	print( "\n" , ( index + 1 ) )
+	# 	pprint( image_map )
 
 	# 2.) Interact with Every Blank Slide ( should be every-other-one )
 	image_objects = []

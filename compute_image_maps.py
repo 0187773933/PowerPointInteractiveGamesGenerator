@@ -130,6 +130,8 @@ def validate_text_box( shape ):
 		return False
 	if len( shape.text_frame.text ) < 1:
 		return False
+	if shape.text_frame.text == " ":
+		return False
 
 	# 3.) Validate Shape is "rEcTanGULar" and appropriate size
 	# doesn't do a very good job, but 99% it works
@@ -152,6 +154,8 @@ def validate_blank_box( shape ):
 		return False
 	if len( shape.text_frame.text ) > 0:
 		return False
+	if shape.text_frame.text == " ":
+		return False
 
 	# 3.) Validate Shape is "rEcTanGULar" and appropriate size
 	# doesn't do a very good job, but 99% it works
@@ -172,8 +176,14 @@ def find_matching_blank_box( text_box , PARSED_BLANK_BOXES ):
 def get_shape_objects( input_path ):
 	global STRICT_MODE
 	p = Presentation( input_path )
-	# print( p.slide_width )
-	# print( p.slide_height )
+	print( p.slide_width )
+	print( p.slide_height )
+	# SLIDE_MASTER_WIDTH = 12192000
+	# SLIDE_MASTER_HEIGHT = 6858000
+	# SLIDE_WIDTH_IN_INCHES = ( SLIDE_MASTER_WIDTH / _EMUS_PER_INCH )
+	# SLIDE_HEIGHT_IN_INCHES = ( SLIDE_MASTER_HEIGHT / _EMUS_PER_INCH )
+	# #print( SLIDE_WIDTH_IN_INCHES , SLIDE_HEIGHT_IN_INCHES )
+	# SLIDE_MIDPOINT_IN_INCHES = [ ( SLIDE_WIDTH_IN_INCHES / 2 ) , ( SLIDE_HEIGHT_IN_INCHES / 2 ) ]
 
 	# print( dir( p.slides[0].slide_layout ) )
 	# print( dir( p.slides[0].slide_layout.element ) )
@@ -185,7 +195,7 @@ def get_shape_objects( input_path ):
 		for shape_index , shape in enumerate( slide.shapes ):
 			if validate_text_box( shape ):
 				PARSED_TEXT_BOXES.append({
-					"text": shape.text_frame.text ,
+					"text": shape.text_frame.text.strip() ,
 					"slide_number": ( slide_index + 1 ) ,
 					"element_number": ( shape_index + 1 ) ,
 					"top": shape.top ,

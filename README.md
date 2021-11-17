@@ -43,3 +43,4 @@
 - auto generate blank slides
 - fix accidental double drop on correct answer overcount
 - wrap into docker server , upload zip of .pptx and images , download zip of html files
+- add "any position" for generic list

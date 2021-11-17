@@ -72,8 +72,9 @@ def build_drag_and_drop_html( options ):
 		window.text_font = "{options["text_font"]}";
 		window.text_x_offset_factor = {options["text_x_offset_factor"]};
 		window.text_y_offset_factor = {options["text_y_offset_factor"]};
-		window.randomize_order = true;
-		window.auto_advance = true;
+		window.any_position = {str( options["any_position"] ).lower()};
+		window.randomize_order = {str( options["randomize_order"] ).lower()};
+		window.auto_advance = {str( options["auto_advance"] ).lower()};
 		let interactive_drag_and_drop_script = document.createElement( "script" );
 		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]}?v=" + ( new Date() ).getTime() );
 		interactive_drag_and_drop_script.onload = load;
@@ -135,8 +136,9 @@ def build_typing_html( options ):
 		window.text_font = "{options["text_font"]}";
 		window.text_x_offset_factor = {options["text_x_offset_factor"]};
 		window.text_y_offset_factor = {options["text_y_offset_factor"]};
-		window.randomize_order = true;
-		window.auto_advance = true;
+		window.any_position = {str( options["any_position"] ).lower()};
+		window.randomize_order = {str( options["randomize_order"] ).lower()};
+		window.auto_advance = {str( options["auto_advance"] ).lower()};
 		let interactive_typing_script = document.createElement( "script" );
 		interactive_typing_script.setAttribute( "src" , "{options["cdn"]["interactive_typing_js"]}?v=" + ( new Date() ).getTime() );
 		interactive_typing_script.onload = load;
@@ -148,6 +150,12 @@ def build_typing_html( options ):
 def generate( config ):
 	if "images" not in config:
 		sys.exit( 1 )
+	if "any_position" not in config:
+		config[ "any_position" ] = False
+	if "randomize_order" not in config:
+		config[ "randomize_order" ] = True
+	if "auto_advance" not in config:
+		config[ "auto_advance" ] = True
 	pprint( config )
 
 	# input_config_path = Path( sys.argv[1] )
@@ -163,6 +171,7 @@ def generate( config ):
 	typing_base_dir = config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
 	typing_base_dir.mkdir( parents=True , exist_ok=True )
 	# print( config[ "output_base_dir" ].absolute() )
+
 
 	names = [ x[0] for x in config["images"] ]
 	next_names = []
@@ -189,10 +198,13 @@ def generate( config ):
 		# image_map = [ image_map_raw[ 0 ] , ...[ f"\t\t\t{x}" for x in image_map_raw[ 1:-2 ] ] , f"\t\t{image_map_raw[-1]}" ]
 		# image_map = "\n".join( image_map )
 
+		# Default
 		# next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
 		# next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
-		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{cached_title}/{next_index_prefix}.html'
-		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{cached_title}/{next_index_prefix}.html'
+
+		# Adhoc , because nested
+		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/006-Muscles/{cached_title}/{next_index_prefix}.html'
+		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/006-Muscles/{cached_title}/{next_index_prefix}.html'
 
 		# print( next_challenge_drag_and_drop_url )
 		options = config
