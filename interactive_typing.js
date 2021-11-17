@@ -22,8 +22,11 @@ function start_interactive_typing() {
 		let next_challenge_url = window.next_challenge_url;
 		let randomize_order = true;
 		let auto_advance = true;
+		let any_position = false;
+		let drawn_correct_indexes = {};
 		if ( typeof window.randomize_order != "undefined" ) { randomize_order = window.randomize_order; }
 		if ( typeof window.auto_advance != "undefined" ) { auto_advance = window.auto_advance; }
+		if ( typeof window.any_position != "undefined" ) { any_position = window.any_position; }
 
 		let width_scale_percentage = ( image_scale_percentage / 100 );
 		let height_scale_percentage = ( image_scale_percentage / 100 );
@@ -193,6 +196,7 @@ function start_interactive_typing() {
 
 			// Randomize Items
 			if ( randomize_order ) {
+				console.log( "here" );
 				areas = shuffleArray( [ ...areas ] );
 				rectangle_objects = shuffleArray( rectangle_objects );
 			}
@@ -211,13 +215,29 @@ function start_interactive_typing() {
 			});
 			answer_input_element.addEventListener( "keyup" , function( event ) {
 				let input_text = this.value.toLowerCase();
+				if ( active_rectangle_index in drawn_correct_indexes ) {
+					console.log( "already answered from anywhere position" );
+					while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
+						active_rectangle_index += 1;
+						console.log( active_rectangle_index );
+					}
+				}
 				let correct_value = rectangle_objects[ active_rectangle_index ].area.alt.toLowerCase();
 				if ( input_text === correct_value ) {
 					this.value = "";
 					hint_area_element.innerText = "";
 					draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
 					add_text_to_area( rectangle_objects[ active_rectangle_index ] );
+					drawn_correct_indexes[ active_rectangle_index ] = 1;
+					console.log( drawn_correct_indexes );
 					active_rectangle_index += 1;
+					if ( active_rectangle_index in drawn_correct_indexes ) {
+						console.log( "already answered from anywhere position" );
+						while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
+							active_rectangle_index += 1;
+							console.log( active_rectangle_index );
+						}
+					}
 					if ( active_rectangle_index === total_rectangles ) {
 						if ( next_challenge_url ) {
 							if ( auto_advance ) {
@@ -227,9 +247,44 @@ function start_interactive_typing() {
 					} else {
 						draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 					}
+				} else {
+					if ( any_position === true ) {
+						let potential_correct_values = rectangle_objects.map( ( x ) => { return x.area.alt.toLowerCase() } );
+						let pcv = {};
+						potential_correct_values.forEach( ( x , i ) => { pcv[ x ] = i } );
+						if ( input_text in pcv ) {
+							console.log( "correct answer for anywhere position" );
+							this.value = "";
+							hint_area_element.innerText = "";
+							active_index = pcv[ input_text ]
+							console.log( active_index );
+							draw_rectangle( ...rectangle_objects[ active_index ].translated_coordinates , answered_color );
+							add_text_to_area( rectangle_objects[ active_index ] );
+							drawn_correct_indexes[ active_index ] = 1;
+							console.log( drawn_correct_indexes );
+							if ( active_index === total_rectangles ) {
+								if ( next_challenge_url ) {
+									if ( auto_advance ) {
+										window.location.href = next_challenge_url;
+									}
+								}
+							}
+						}
+					}
 				}
 			});
-
+			answer_input_element.addEventListener( "keydown" , function( event ) {
+				// console.log( "here" );
+				// console.log( event.ctrlKey , event.key , event.keyCode );
+				if ( event.key === "Control" && event.keyCode === 17 ) {
+					// console.log( "there" );
+					hint_area_element.innerText = rectangle_objects[ active_rectangle_index ].area.alt;
+					answer_input_element.focus();
+					answer_input_element.select();
+				}
+			});
+			answer_input_element.focus();
+			answer_input_element.setSelectionRange( answer_input_element.value.length , answer_input_element.value.length , "forward" );
 		}
 		if ( next_challenge_url ) {
 			let hint_button = document.getElementById( "hint-button" );
@@ -239,8 +294,6 @@ function start_interactive_typing() {
 				window.location.href = next_challenge_url;
 			});
 		}
-		answer_input_element.focus();
-		answer_input_element.setSelectionRange( answer_input_element.value.length , answer_input_element.value.length , "forward" );
 	}
 	init();
 }
