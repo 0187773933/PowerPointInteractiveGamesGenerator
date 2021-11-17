@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>007</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Rod" title="Rod" href="" coords="1324.1738582677165,607.6952755905511,1436.035748031496,565.0434645669291" shape="rect">
+			<area target="" alt="Heads" title="Heads" href="" coords="1793.7392125984252,607.6951181102362,1919.1662992125985,565.0433070866142" shape="rect">
+			<area target="" alt="Light Chains" title="Light Chains" href="" coords="1529.2173228346455,736.5648818897638,1744.383779527559,687.1303937007874" shape="rect">
+			<area target="" alt="Heavy Chains" title="Heavy Chains" href="" coords="1038.5727559055117,901.4344881889763,1293.1815748031495,853.0434645669291" shape="rect">
+			<area target="" alt="Hinge Region" title="Hinge Region" href="" coords="1490.0869291338581,892.611653543307,1717.7902362204723,836.0248818897637" shape="rect">
+			<area target="" alt="Coiled-Portion" title="Coiled-Portion" href="" coords="999.1303937007874,733.9562204724409,1253.7392125984252,685.5651968503937" shape="rect">
+			<area target="" alt="Myosin Myofilament" title="Myosin Myofilament" href="" coords="943.8261417322834,535.1483464566929,1290.051181102362,486.7573228346457" shape="rect">
+			<area target="" alt="Myosin Molecule" title="Myosin Molecule" href="" coords="960.0,238.88614173228345,1253.7392125984252,190.4951181102362" shape="rect">
+			<area target="" alt="Tropomyosin" title="Tropomyosin" href="" coords="175.61622047244094,733.9560629921259,404.34787401574806,685.5650393700787" shape="rect">
+			<area target="" alt="G Actin Molecules" title="G Actin Molecules" href="" coords="163.61622047244094,808.1535433070866,463.3044094488189,759.7625196850394" shape="rect">
+			<area target="" alt="Troponin" title="Troponin" href="" coords="662.6086614173229,783.9581102362206,827.52,736.5650393700788" shape="rect">
+			<area target="" alt="Attachment Site" title="Attachment Site" href="" coords="766.4346456692914,466.0837795275591,1038.572755905512,417.69275590551183" shape="rect">
+			<area target="" alt="Troponin" title="Troponin" href="" coords="584.5877165354331,463.2143307086614,749.4990551181102,415.8212598425197" shape="rect">
+			<area target="" alt="Tropomyosin" title="Tropomyosin" href="" coords="345.1812598425197,480.2708661417323,573.9129133858268,431.87984251968504" shape="rect">
+			<area target="" alt="Actin Myofilament" title="Actin Myofilament" href="" coords="3.6820472440944885,540.0,323.5502362204724,491.60897637795273" shape="rect">
+			<area target="" alt="F Actin Strands" title="F Actin Strands" href="" coords="25.79732283464567,454.8086614173228,279.5215748031496,408.9510236220472" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172538324-492194322.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/008.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

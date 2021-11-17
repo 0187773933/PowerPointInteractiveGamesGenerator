@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>009</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Mitochondria" title="Mitochondria" href="" coords="874.4346456692914,483.3011023622047,1109.7390551181102,435.13039370078735" shape="rect">
+			<area target="" alt="Myofibrils" title="Myofibrils" href="" coords="874.4348031496063,311.7732283464567,1065.9132283464567,263.60251968503934" shape="rect">
+			<area target="" alt="Sarcomere" title="Sarcomere" href="" coords="845.4781102362205,97.29196850393701,1036.9566929133857,49.12125984251969" shape="rect">
+			<area target="" alt="A Band" title="A Band" href="" coords="1466.6086614173228,606.4966929133858,1620.0,559.284094488189" shape="rect">
+			<area target="" alt="H Zone" title="H Zone" href="" coords="1460.1932283464569,682.4796850393701,1603.4880314960633,648.0" shape="rect">
+			<area target="" alt="Z Disk" title="Z Disk" href="" coords="1177.2872440944882,769.9738582677164,1299.896220472441,722.7612598425196" shape="rect">
+			<area target="" alt="Z Disk" title="Z Disk" href="" coords="1755.3741732283465,738.8423622047244,1877.9831496062993,691.6297637795276" shape="rect">
+			<area target="" alt="M Line" title="M Line" href="" coords="1460.1932283464569,763.6074015748031,1592.6732283464569,729.127716535433" shape="rect">
+			<area target="" alt="I Band" title="I Band" href="" coords="1160.3307086614172,667.815905511811,1313.7220472440945,620.6033070866142" shape="rect">
+		</map>
+
+	</div>
+	<div>
+		<center><canvas id="interactive-image-canvas"></canvas></center>
+	</div>
+	</br>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="input-group">
+					<span class="input-group-text" id="bootstrap-answer-companion">Answer</span>
+					<input autofocus id="input-answer" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="bootstrap-answer-companion">
+					<button class="btn btn-outline-secondary" type="button" id="hint-button">Hint</button>
+				</div>
+			</div>
+			<div class="col-2"></div>
+		</div>
+		</br>
+		<div class="row justify-content-center">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<p id="hint-area" class="text-center"></p>
+			</div>
+			<div class="col-2"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_typing(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172538900-682421963.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/Typing/006-Muscles/test/010.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_typing_script = document.createElement( "script" );
+		interactive_typing_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_typing.js?v=" + ( new Date() ).getTime() );
+		interactive_typing_script.onload = load;
+		document.head.appendChild( interactive_typing_script );
+	</script>
+</body>
+</html>

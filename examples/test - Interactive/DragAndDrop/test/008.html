@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>008</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Ca" title="Ca" href="" coords="727.8259842519685,196.96661417322835,810.2606299212598,150.26094488188977" shape="rect">
+			<area target="" alt="Ca" title="Ca" href="" coords="792.5215748031496,710.8796850393701,874.9562204724409,664.1740157480315" shape="rect">
+			<area target="" alt="Actin Myofilament" title="Actin Myofilament" href="" coords="1570.4344881889763,335.22740157480314,1884.5215748031496,281.73905511811023" shape="rect">
+			<area target="" alt="G Actin Molecule" title="G Actin Molecule" href="" coords="1570.4343307086615,489.14047244094485,1856.3478740157482,435.65212598425194" shape="rect">
+			<area target="" alt="Myosin Myofilament" title="Myosin Myofilament" href="" coords="1564.1730708661416,610.700472440945,1913.7387401574802,557.212125984252" shape="rect">
+			<area target="" alt="Cross-Bridge" title="Cross-Bridge" href="" coords="1354.956220472441,923.2275590551181,1585.5653543307087,869.7392125984252" shape="rect">
+			<area target="" alt="Active Site" title="Active Site" href="" coords="334.4344881889764,916.9666141732284,534.2607874015748,863.4782677165355" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172538616-924949745.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/009.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

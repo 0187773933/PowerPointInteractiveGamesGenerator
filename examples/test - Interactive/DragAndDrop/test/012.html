@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>012</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Axon Branch" title="Axon Branch" href="" coords="554.0869291338582,170.25779527559055,773.2173228346456,123.65244094488189" shape="rect">
+			<area target="" alt="Neuromuscular Junction" title="Neuromuscular Junction" href="" coords="676.1740157480315,286.08377952755905,1070.6086614173228,239.47842519685037" shape="rect">
+			<area target="" alt="Presynaptic Terminal" title="Presynaptic Terminal" href="" coords="769.0436220472442,393.2078740157481,1109.7388976377954,346.6025196850394" shape="rect">
+			<area target="" alt="Sarcolemma" title="Sarcolemma" href="" coords="881.4781102362205,459.2979527559055,1109.7388976377952,412.6925984251968" shape="rect">
+			<area target="" alt="Sarcoplasm" title="Sarcoplasm" href="" coords="939.3911811023622,774.4285039370078,1142.6086614173228,727.8231496062991" shape="rect">
+			<area target="" alt="Mitochondrion" title="Mitochondrion" href="" coords="1164.5217322834646,935.6456692913387,1421.7388976377954,889.04031496063" shape="rect">
+			<area target="" alt="Myofibrils" title="Myofibrils" href="" coords="173.73905511811023,940.608503937008,360.5214173228346,894.0031496062993" shape="rect">
+			<area target="" alt="Synaptic Cleft" title="Synaptic Cleft" href="" coords="1668.0,941.9965354330709,1920.0,895.3911811023622" shape="rect">
+			<area target="" alt="Postsynaptic Membrane" title="Postsynaptic Membrane" href="" coords="1363.434960629921,1012.5215748031496,1757.739212598425,965.916220472441" shape="rect">
+			<area target="" alt="Sarcoplasmic Reticulum" title="Sarcoplasmic Reticulum" href="" coords="0.0,863.6503937007874,382.4344881889764,817.0450393700787" shape="rect">
+			<area target="" alt="Muscle Fiber" title="Muscle Fiber" href="" coords="0.0,774.4285039370078,225.39133858267718,727.8231496062991" shape="rect">
+			<area target="" alt="Capillary" title="Capillary" href="" coords="0.0,701.3012598425198,173.73905511811023,654.6959055118111" shape="rect">
+			<area target="" alt="Presynaptic Terminal" title="Presynaptic Terminal" href="" coords="1281.391968503937,193.56047244094486,1620.5217322834646,146.9551181102362" shape="rect">
+			<area target="" alt="Synaptic Vesicles" title="Synaptic Vesicles" href="" coords="1635.131181102362,247.13370078740155,1919.9999999999998,200.5283464566929" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172539836-81476934.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/013.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

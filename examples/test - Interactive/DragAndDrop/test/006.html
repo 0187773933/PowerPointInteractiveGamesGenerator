@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>006</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Sarcolemma" title="Sarcolemma" href="" coords="769.5908661417324,540.0,987.6773228346458,500.3477165354331" shape="rect">
+			<area target="" alt="Actin Myofilament" title="Actin Myofilament" href="" coords="40.91937007874016,215.8711811023622,347.7762204724409,176.21889763779527" shape="rect">
+			<area target="" alt="Myofibril" title="Myofibril" href="" coords="40.91937007874016,282.98582677165354,208.13669291338584,245.41905511811024" shape="rect">
+			<area target="" alt="Sarcomere" title="Sarcomere" href="" coords="859.5144881889763,1034.99968503937,1077.6009448818897,995.3474015748031" shape="rect">
+			<area target="" alt="Z Disk" title="Z Disk" href="" coords="1684.2744881889764,577.5675590551181,1807.4047244094488,540.0" shape="rect">
+			<area target="" alt="M Line" title="M Line" href="" coords="987.6773228346457,723.5214173228346,1122.0251968503937,684.3908661417323" shape="rect">
+			<area target="" alt="Myosin Myofilament" title="Myosin Myofilament" href="" coords="903.4703937007874,656.0869291338582,1251.7313385826772,616.4348031496063" shape="rect">
+			<area target="" alt="Myosin Myofilament" title="Myosin Myofilament" href="" coords="28.919370078740158,352.1859842519685,366.26094488188977,312.53370078740153" shape="rect">
+			<area target="" alt="Z Disk" title="Z Disk" href="" coords="125.44062992125986,582.5299212598425,248.5708661417323,544.9623622047244" shape="rect">
+			<area target="" alt="Cross-Bridge" title="Cross-Bridge" href="" coords="1371.992283464567,656.0869291338582,1588.6957480314961,616.4348031496063" shape="rect">
+			<area target="" alt="Actin Myofilament" title="Actin Myofilament" href="" coords="417.66157480314956,672.0900787401575,723.8229921259842,632.4377952755906" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172538006-768784153.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/007.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

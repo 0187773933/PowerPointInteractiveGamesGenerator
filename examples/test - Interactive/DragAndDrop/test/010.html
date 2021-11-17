@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>010</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="A Band" title="A Band" href="" coords="1198.4348031496063,320.5184251968504,1339.8262992125983,277.04330708661416" shape="rect">
+			<area target="" alt="I Band" title="I Band" href="" coords="1198.4349606299213,420.69244094488187,1339.8264566929133,377.2171653543307" shape="rect">
+			<area target="" alt="Sarcolemma" title="Sarcolemma" href="" coords="1488.0,624.1705511811023,1704.5218897637797,577.5650393700787" shape="rect">
+			<area target="" alt="Sarcoplasmic Reticulum" title="Sarcoplasmic Reticulum" href="" coords="201.91307086614174,494.2576377952756,586.9563779527559,447.65228346456695" shape="rect">
+			<area target="" alt="Terminal Cisterna" title="Terminal Cisterna" href="" coords="447.13023622047245,651.7352755905513,739.3040944881891,604.6080314960631" shape="rect">
+			<area target="" alt="Transverse Tubule" title="Transverse Tubule" href="" coords="436.975905511811,714.8674015748031,752.271653543307,667.7401574803149" shape="rect">
+			<area target="" alt="Terminal Cisterna" title="Terminal Cisterna" href="" coords="443.99984251968505,774.8691338582678,736.1737007874017,727.7418897637796" shape="rect">
+			<area target="" alt="Capillary" title="Capillary" href="" coords="480.52173228346453,833.7396850393702,647.999842519685,786.612440944882" shape="rect">
+			<area target="" alt="Myofibril" title="Myofibril" href="" coords="506.34771653543305,892.44,673.8258267716535,845.3127559055118" shape="rect">
+			<area target="" alt="Mitochondrion" title="Mitochondrion" href="" coords="424.4543307086615,1009.176062992126,690.3505511811024,962.0488188976378" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172539218-894653268.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/011.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>

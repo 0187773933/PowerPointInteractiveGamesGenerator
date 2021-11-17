@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>011</title>
+	<link rel="stylesheet" href="https://39363.org/CDN/jquery-ui.css" integrity="" >
+	<script src="https://39363.org/CDN/jquery-3.6.0.min.js" integrity=""></script>
+	<link rel="stylesheet" href="https://39363.org/CDN/bootstrap.min.css" integrity="">
+	<script src="https://39363.org/CDN/bootstrap.bundle.min.js" integrity=""></script>
+	<script src="https://39363.org/CDN/jquery-ui.min.js" integrity="" ></script>
+</head>
+<body>
+	<div id="label-container">
+		<map name="image-map">
+			<area target="" alt="Dendrites" title="Dendrites" href="" coords="253.56519685039368,271.99685039370075,441.3910236220472,225.3914960629921" shape="rect">
+			<area target="" alt="Cell Body" title="Cell Body" href="" coords="1172.8696062992126,339.8226771653543,1344.5218897637797,294.2606299212598" shape="rect">
+			<area target="" alt="Schwann Cell" title="Schwann Cell" href="" coords="1164.7826771653545,609.04031496063,1396.1737007874017,562.4349606299213" shape="rect">
+			<area target="" alt="Axon" title="Axon" href="" coords="597.9129133858268,762.431653543307,711.1300787401575,715.8262992125983" shape="rect">
+			<area target="" alt="Node of Ranvier" title="Node of Ranvier" href="" coords="1174.4348031496063,824.347874015748,1463.4782677165354,777.7425196850393" shape="rect">
+			<area target="" alt="Presynaptic Terminal" title="Presynaptic Terminal" href="" coords="1283.6085039370078,1014.7875590551181,1627.8259842519683,968.1822047244094" shape="rect">
+		</map>
+
+	</div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() { start_interactive_drag_and_drop(); }
+		window.image_source_url = "https://39363.org/IMAGE_BUCKET/1637172539574-320150231.jpeg";
+		window.next_challenge_url = "https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive/DragAndDrop/006-Muscles/test/012.html";
+		window.image_scale_percentage = 60;
+		window.unanswered_color = "red";
+		window.answered_color = "#13E337";
+		window.text_color = "white";
+		window.text_font = "17px Arial";
+		window.text_x_offset_factor = 2;
+		window.text_y_offset_factor = 3;
+		window.any_position = false;
+		window.randomize_order = true;
+		window.auto_advance = true;
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "https://39363.org/CDN/NOTES/interactive_drag_and_drop.js?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>
