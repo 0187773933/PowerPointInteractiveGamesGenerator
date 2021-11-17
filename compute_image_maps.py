@@ -178,12 +178,6 @@ def get_shape_objects( input_path ):
 	p = Presentation( input_path )
 	print( p.slide_width )
 	print( p.slide_height )
-	# SLIDE_MASTER_WIDTH = 12192000
-	# SLIDE_MASTER_HEIGHT = 6858000
-	# SLIDE_WIDTH_IN_INCHES = ( SLIDE_MASTER_WIDTH / _EMUS_PER_INCH )
-	# SLIDE_HEIGHT_IN_INCHES = ( SLIDE_MASTER_HEIGHT / _EMUS_PER_INCH )
-	# #print( SLIDE_WIDTH_IN_INCHES , SLIDE_HEIGHT_IN_INCHES )
-	# SLIDE_MIDPOINT_IN_INCHES = [ ( SLIDE_WIDTH_IN_INCHES / 2 ) , ( SLIDE_HEIGHT_IN_INCHES / 2 ) ]
 
 	# print( dir( p.slides[0].slide_layout ) )
 	# print( dir( p.slides[0].slide_layout.element ) )
