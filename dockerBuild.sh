@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker build -t spotify-dbus-controller .
+sudo docker build -t "public-ppt-interactive-generator-server" .

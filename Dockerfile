@@ -6,23 +6,22 @@ RUN apt-get install build-essential -y
 RUN apt-get install net-tools -y
 RUN apt-get install python3-pip -y
 RUN apt-get install python3-dev -y
-RUN apt-get install dbus -y
 
 RUN python3 -m pip install -U pip
 
-RUN python3 -m pip install redis
-RUN python3 -m pip install sanic
-# RUN python3 -m pip install dbus
+RUN python3 -m pip install redis -U
+RUN python3 -m pip install sanic -U
 
-VOLUME [ "/sys/fs/cgroup" , "/sys/fs/cgroup" ]
-#VOLUME [ "/run/user/1000/bus" , "/run/user/1000/bus" ]
+RUN python3 -m pip install python-pptx -U
+RUN python3 -m pip install sanic-jwt-extended --pre -U
+RUN python3 -m pip install natsort -U
 
-ENV XDG_RUNTIME_DIR "/run/user/1000"
-ENV DBUS_SESSION_BUS_ADDRESS "unix:path=/run/user/1000/bus"
+COPY . /home
+WORKDIR "/home/"
 
-COPY python_app /home/python_app
-WORKDIR "/home/python_app"
 
-#ENTRYPOINT [ "python3" , "server.py" ]
-
-ENTRYPOINT [ "/bin/bash" ]
+# ENTRYPOINT [ "/bin/bash" ]
+# sudo docker run --rm -it --entrypoint bash public-ppt-interactive-generator-server:latest
+# -v $(pwd)/config.py:/root/app/config.py
+# --mount type=bind,source=/tmp/a.txt,target=/root/a.txt
+ENTRYPOINT [ "python3" , "/home/server.py" ]
