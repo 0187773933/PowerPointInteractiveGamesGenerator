@@ -147,7 +147,7 @@ def build_typing_html( options ):
 </body>
 </html>'''
 
-def generate( config ):
+def generate( config , append_title=True ):
 	if "images" not in config:
 		sys.exit( 1 )
 	if "any_position" not in config:
@@ -166,9 +166,13 @@ def generate( config ):
 		pass
 	cached_title = config["title"] # no idea , somehow somebody changes it
 	config[ "output_base_dir" ].mkdir( parents=True , exist_ok=True )
-	drag_and_drop_base_dir = config[ "output_base_dir" ].joinpath( "DragAndDrop" , config["title"] )
+	if append_title:
+		drag_and_drop_base_dir = config[ "output_base_dir" ].joinpath( "DragAndDrop" , config["title"] )
+		typing_base_dir = config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
+	else:
+		drag_and_drop_base_dir = config[ "output_base_dir" ].joinpath( "DragAndDrop" )
+		typing_base_dir = config[ "output_base_dir" ].joinpath( "Typing" )
 	drag_and_drop_base_dir.mkdir( parents=True , exist_ok=True )
-	typing_base_dir = config[ "output_base_dir" ].joinpath( "Typing" , config["title"] )
 	typing_base_dir.mkdir( parents=True , exist_ok=True )
 	# print( config[ "output_base_dir" ].absolute() )
 
@@ -199,12 +203,16 @@ def generate( config ):
 		# image_map = "\n".join( image_map )
 
 		# Default
-		# next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
-		# next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}-{next_names[index]}.html'
+		if append_title:
+			next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}.html'
+			next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}.html'
+		else:
+			next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}{next_index_prefix}.html'
+			next_challenge_typing_url = f'{config["base_hosted_url"]}{next_index_prefix}.html'
 
 		# Adhoc , because nested
-		next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/006-Muscles/{cached_title}/{next_index_prefix}.html'
-		next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/006-Muscles/{cached_title}/{next_index_prefix}.html'
+		# next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/006-Muscles/{cached_title}/{next_index_prefix}.html'
+		# next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/006-Muscles/{cached_title}/{next_index_prefix}.html'
 
 		# print( next_challenge_drag_and_drop_url )
 		options = config

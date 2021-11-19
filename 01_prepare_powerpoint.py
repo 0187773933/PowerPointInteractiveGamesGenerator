@@ -107,6 +107,20 @@ def validate_text_box( shape ):
 		return False
 	return True
 
+# def generate_local_stage_one( input_path , config , output_path ):
+# 	input_path = Path( sys.argv[ 1 ] )
+# 	config = utils.read_json( sys.argv[ 2 ] )
+
+# 	# 1.) Create Copy of PowerPoint With All text removed from boxes with correct fill color
+# 	p = Presentation( sys.argv[ 1 ] )
+# 	p_clone = deepcopy( p )
+# 	for slide_index , slide in enumerate( p_clone.slides ):
+# 		for shape_index , shape in enumerate( slide.shapes ):
+# 			if validate_text_box( shape ):
+# 				print( f"{slide_index} === {shape_index} === valid text box" )
+# 				shape.text_frame.text = ""
+# 	p_clone.save( f"{input_path.stem}-Blank.pptx" )
+
 
 if __name__ == "__main__":
 
