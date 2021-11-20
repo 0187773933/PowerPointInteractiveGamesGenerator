@@ -26,5 +26,4 @@
 - add back button
 - auto adjust image scale percentage based on viewport size
 - adjust bootstrap columns for drag and drop based on length of longest word
-- auto generate blank slides
 - fix accidental double drop on correct answer overcount
