@@ -9,7 +9,8 @@
 sudo docker rm "public-ppt-interactive-generator-server" -f || echo "failed to remove existing server" && \
 sudo docker run -dit --restart="always" --name "public-ppt-interactive-generator-server" \
 --mount type=bind,source=/home/morphs/DOCKER_IMAGES/PowerPointInteractiveGameGenerator/config.json,target=/home/config.json \
--p 17393:9379 xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server config.json```
+-p 17393:9379 xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server config.json
+```
 
 ## Local Generation - Build Docker Server
 
