@@ -3,7 +3,7 @@
 
 ## Local Generation - Docker Hub
 - https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server
-1. `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
+1. Run `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
 2. Run :
 ```
 sudo docker rm "public-ppt-interactive-generator-server" -f || echo "failed to remove existing server" && \
