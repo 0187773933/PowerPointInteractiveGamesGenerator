@@ -6,7 +6,7 @@
 1. Build the Docker Image `./dockerBuild.sh`
 2. Edit `./dockerBuild.sh` with correct absolute path of config.json
 3. Run `./dockerRun.sh`
-4. Open `http://localhost:17393/local`
+4. Open http://localhost:17393/local
 
 ## Image and HTML Hosted Generation
 
