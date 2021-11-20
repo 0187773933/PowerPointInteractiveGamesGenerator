@@ -196,7 +196,6 @@ function start_interactive_typing() {
 
 			// Randomize Items
 			if ( randomize_order ) {
-				console.log( "here" );
 				areas = shuffleArray( [ ...areas ] );
 				rectangle_objects = shuffleArray( rectangle_objects );
 			}
@@ -205,6 +204,11 @@ function start_interactive_typing() {
 			let answer_input_element = document.getElementById( "input-answer" );
 			let active_rectangle_index = 0;
 			let total_rectangles = rectangle_objects.length;
+			let time_now = new Date().getTime();
+			let time_last_control = new Date().getTime();
+			let time_last_control_z = new Date().getTime();
+			let control_cooloff = 1.0;
+			let control_z_cooloff = 1.0;
 			draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 			let hint_button_element = document.getElementById( "hint-button" );
 			let hint_area_element = document.getElementById( "hint-area" );
@@ -248,7 +252,7 @@ function start_interactive_typing() {
 						draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 					}
 				} else {
-					if ( any_position === true ) {
+					//if ( any_position === true ) {
 						let potential_correct_values = rectangle_objects.map( ( x ) => { return x.area.alt.toLowerCase() } );
 						let pcv = {};
 						potential_correct_values.forEach( ( x , i ) => { pcv[ x ] = i } );
@@ -271,9 +275,53 @@ function start_interactive_typing() {
 								}
 							}
 						}
-					}
+					//}
 				}
 			});
+			let control_z_listener = false;
+			function setup_control_z_listener() {
+				answer_input_element.addEventListener( "keydown" , function( event ) {
+					if ( event.key !== "Control" ) { return; }
+					if ( event.ctrlKey !== true ) { return; }
+					time_last_control = new Date().getTime();
+					answer_input_element.addEventListener( "keyup" , function( event_two ) {
+						if ( event_two.keyCode !== 90 ) { return; } // Control + Z
+						time_now = new Date().getTime();
+						let time_since_last_control_z = ( ( time_now - time_last_control_z ) / 1000 );
+						if ( time_since_last_control_z < control_z_cooloff ) { return; }
+						let time_since_last_control = ( ( time_now - time_last_control ) / 1000 );
+						if ( time_since_last_control > control_cooloff ) { return; }
+						console.log( `Control + Z === ${time_now} === ${time_since_last_control_z}` );
+						time_last_control_z = time_now;
+						this.value = "";
+						hint_area_element.innerText = "";
+						draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
+						add_text_to_area( rectangle_objects[ active_rectangle_index ] );
+						drawn_correct_indexes[ active_rectangle_index ] = 1;
+						console.log( drawn_correct_indexes );
+						active_rectangle_index += 1;
+						if ( active_rectangle_index in drawn_correct_indexes ) {
+							console.log( "already answered from anywhere position" );
+							while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
+								active_rectangle_index += 1;
+								console.log( active_rectangle_index );
+							}
+						}
+						if ( active_rectangle_index === total_rectangles ) {
+							if ( next_challenge_url ) {
+								if ( auto_advance ) {
+									//window.location.href = next_challenge_url;
+								}
+							}
+						} else {
+							draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
+						}
+						return;
+					});
+				});
+			}
+			setup_control_z_listener();
+
 			answer_input_element.addEventListener( "keydown" , function( event ) {
 				// console.log( "here" );
 				// console.log( event.ctrlKey , event.key , event.keyCode );
