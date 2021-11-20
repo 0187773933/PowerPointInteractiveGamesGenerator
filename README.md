@@ -20,8 +20,9 @@
 
 - https://39363.org/CDN/MISC/ExampleDragAndDrop.html
 - https://39363.org/CDN/MISC/ExampleTyping.html
-- `Control` = Show Hint
-- `Control + Z` = Auto Enter Current Label
+- In Typing Mode ""
+	- `Control` = Show Hint
+	- `Control + Z` = Auto Enter Current Label
 
 ### Todo
 
