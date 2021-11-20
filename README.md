@@ -1,32 +1,18 @@
 # PowerPoint Interactive Games Generator
 > Generates Drag-And-Drop and Typing Prompt Games from Placeholder Textboxes
 
-- Example Image Upload Server: https://github.com/0187773933/ImageUploadServer
+## Local Generation via Docker Server
 
-1. Create PowerPoint of slides
+1. Build the Docker Image `./dockerBuild.sh`
+2. Edit `./dockerBuild.sh` with correct absolute path of config.json
+3. Run `./dockerRun.sh`
+4. Open `http://localhost:17393/local`
 
-	- For each question, there needs to be 2 separate slides
+## Image and HTML Hosted Generation
 
-	- 1st Slide = Normal one with text inside textboxes
-
-	- 2nd Slide = Exact duplicate of the 1st , only text is removed
-
-		> `Windows Key + "D"` or `Mac Key + "D"` to duplicate slides
-
-	- Caveats :
-
-		- The hex "fill color" of the textboxes must match that in config
-		- it is easy to accidentally move a text box when deleting the text for the second slide in each question
-
-	- Example of Slide 1 and Slide 2 for "Question 1"
-
-<img src="https://39363.org/IMAGE_BUCKET/1636525166177-241760869.png" style="zoom:27%;" />
-
-2. Export All Slides as JPEG
-3. `cp config_example.json config.json`
-4. Fill out config.json
-5. run `python3 main.py "./examples/Quiz 5.pptx" config.json`
-6. Upload Generated HTML files to File Server
+1. Run `python3 01_prepare_powerpoint.py input.pptx config.json`
+2. Export input.pptx as JPEGS
+3. Run `python3 02_upload_and_generate_powerpoint.py input-Blank.pptx config.json`
 
 ### Result
 
@@ -42,5 +28,3 @@
 - adjust bootstrap columns for drag and drop based on length of longest word
 - auto generate blank slides
 - fix accidental double drop on correct answer overcount
-- wrap into docker server , upload zip of .pptx and images , download zip of html files
-- add "any position" for generic list

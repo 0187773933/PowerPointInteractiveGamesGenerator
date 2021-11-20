@@ -253,6 +253,7 @@ function start_interactive_typing() {
 						let pcv = {};
 						potential_correct_values.forEach( ( x , i ) => { pcv[ x ] = i } );
 						if ( input_text in pcv ) {
+							if ( pcv[ input_text ] in drawn_correct_indexes ) { return; }
 							console.log( "correct answer for anywhere position" );
 							this.value = "";
 							hint_area_element.innerText = "";
