@@ -5,7 +5,7 @@ id=$(sudo docker run -dit --restart="always" \
 --name $APP_NAME \
 --mount type=bind,source=/home/morphs/DOCKER_IMAGES/PowerPointInteractiveGamesGenerator/config.json,target=/home/config.json \
 -p 17393:9379 \
-$APP_NAME config.json)
+xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server config.json)
 echo "ID = $id"
 sudo docker logs -f "$id"
 # sudo docker run --rm -it --entrypoint bash b30b9f9f73bd

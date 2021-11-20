@@ -1,7 +1,15 @@
 # PowerPoint Interactive Games Generator
 > Generates Drag-And-Drop and Typing Prompt Games from Placeholder Textboxes
 
-## Local Generation via Docker Server
+## Local Generation - Docker Hub
+- https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server
+- `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
+- Run `sudo docker rm "public-ppt-interactive-generator-server" -f || echo "failed to remove existing server" && \
+sudo docker run -dit --restart="always" --name "public-ppt-interactive-generator-server" \
+--mount type=bind,source=/home/morphs/DOCKER_IMAGES/PowerPointInteractiveGameGenerator/config.json,target=/home/config.json \
+-p 17393:9379 xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server config.json`
+
+## Local Generation - Build Docker Server
 
 1. Build the Docker Image `./dockerBuild.sh`
 2. Edit `./dockerBuild.sh` with correct absolute path of config.json
@@ -12,7 +20,7 @@
 
 1. Run `python3 01_prepare_powerpoint.py input.pptx config.json`
 2. Export input.pptx as JPEGS
-3. Run `python3 02_upload_and_generate_powerpoint.py input-Blank.pptx config.json`
+4. Run `python3 02_upload_and_generate_powerpoint.py input-Blank.pptx config.json`
 
 ### Result
 
