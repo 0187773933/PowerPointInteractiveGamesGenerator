@@ -3,14 +3,15 @@
 
 ## Local Generation - Docker Hub
 - https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server
-- `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
-- Run :
+1. `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
+2. Run :
 ```
 sudo docker rm "public-ppt-interactive-generator-server" -f || echo "failed to remove existing server" && \
 sudo docker run -dit --restart="always" --name "public-ppt-interactive-generator-server" \
 --mount type=bind,source=/home/morphs/DOCKER_IMAGES/PowerPointInteractiveGameGenerator/config.json,target=/home/config.json \
 -p 17393:9379 xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server config.json
 ```
+3. Open http://localhost:17393/local
 
 ## Local Generation - Build Docker Server
 
