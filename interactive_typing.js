@@ -138,11 +138,14 @@ function start_interactive_typing() {
 			for ( let i = 0; i < areas.length; ++i ) {
 				let translated_rec_coordinates = translate_raw_rectangle_coordinates_to_ordered( areas[ i ].getAttribute( "coords" ) );
 				let id = areas[ i ].alt.toLowerCase().replace( /\s+/g , '-' );
+				let font = areas[ i ].getAttribute( "font" );
+				if ( font === null ) { font = text_font; }
 				rectangle_objects.push({
 					area: areas[ i ] ,
 					id: id ,
-					translated_coordinates: translated_rec_coordinates
-				})
+					translated_coordinates: translated_rec_coordinates ,
+					font: font
+				});
 				// draw_rectangle( ...translated_rec_coordinates );
 			}
 			// console.log( rectangle_objects );
@@ -186,7 +189,8 @@ function start_interactive_typing() {
 
 			// https://www.w3schools.com/graphics/canvas_text.asp
 			function add_text_to_area( rectangle_object ) {
-				context.font = text_font;
+				// context.font = text_font;
+				context.font = rectangle_object.font;
 				context.fillStyle = text_color;
 				context.textAlign = "center";
 				let x = rectangle_object.translated_coordinates[ 0 ] + ( rectangle_object.translated_coordinates[ 2 ] / text_x_offset_factor );

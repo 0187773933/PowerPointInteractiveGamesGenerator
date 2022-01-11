@@ -204,8 +204,8 @@ def generate( config , append_title=True ):
 
 		# Default
 		if append_title:
-			next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{config["title"]}/{next_index_prefix}.html'
-			next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{config["title"]}/{next_index_prefix}.html'
+			next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}/DragAndDrop/{cached_title}/{next_index_prefix}.html'
+			next_challenge_typing_url = f'{config["base_hosted_url"]}/Typing/{cached_title}/{next_index_prefix}.html'
 		else:
 			next_challenge_drag_and_drop_url = f'{config["base_hosted_url"]}{next_index_prefix}.html'
 			next_challenge_typing_url = f'{config["base_hosted_url"]}{next_index_prefix}.html'

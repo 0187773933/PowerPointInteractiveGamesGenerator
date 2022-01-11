@@ -27,6 +27,30 @@ def enumerate2( xs , start=0 , step=1 ):
 		yield ( start , x )
 		start += step
 
+# https://stackoverflow.com/a/49111747
+def get_nested_dictionary_value( d , l , default_val=None ):
+	if l[ 0 ] not in d:
+		print( "1" )
+		return default_val
+	elif len( l )==1:
+		print( "2" )
+		return d[ l[ 0 ] ]
+	else:
+		print( "3" )
+		return get_nested_dictionary_value( d[ l[ 0 ] ] , l[ 1: ] )
+
+def set_nested_dictionary_value( d , l , set_value=None ):
+	if l[ 0 ] not in d:
+		print( "1" )
+		return set_value
+	elif len( l )==1:
+		print( "3" )
+		d[ l[ 0 ] ] = set_value
+		return d
+	else:
+		print( "3" )
+		return set_nested_dictionary_value( d[ l[ 0 ] ] , l[ 1: ] , set_value )
+
 def get_slide_image_paths( power_point_file ):
 	power_point_file_posix = Path( power_point_file )
 	ALLOWED_EXTENSIONS = [ ".jpeg" ]

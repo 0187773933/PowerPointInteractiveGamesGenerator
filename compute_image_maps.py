@@ -81,11 +81,14 @@ def get_fill_type( fill ):
 
 def get_fill_color( shape ):
 	if hasattr( shape , "fill" ) == False:
+		print( "No Fill Attribute on Shape" )
 		return False
 	fill_type = get_fill_type( shape.fill )
 	if fill_type == False:
+		print( "No Fill Type on Shape" )
 		return False
 	if fill_type != "solid":
+		print( "Fill Type is not Solid" )
 		return False
 	color = shape.fill.fore_color
 	result = {}
@@ -100,6 +103,8 @@ def get_fill_color( shape ):
 			result[ "theme_color" ] = color.theme_color
 		if hasattr( color , "theme_color" ):
 			result[ "theme_color" ] = "{}".format( color.theme_color )
+	else:
+		print( "fill is none color ?" )
 	return result
 
 def validate_correct_color( rgb_object ):
@@ -143,23 +148,30 @@ def validate_blank_box( shape ):
 	# 1.) Validate Background Color Matches "our" Textboxes
 	fill_color = get_fill_color( shape )
 	if fill_color == False:
+		print( "No Fill Color" )
 		return False
 	if "rgb" not in fill_color:
+		print( "RGB Not in Fill Color" )
 		return False
 	if validate_correct_color( fill_color[ "rgb" ] ) == False:
+		print( "Incorrect Fill Color" )
 		return False
 
 	# 2.) Validate There is Text In the Box
 	if hasattr( shape , "text_frame" ) == False:
+		print( "This is Supposed to be a Blank Box , But there is Text Present" )
 		return False
 	if len( shape.text_frame.text ) > 0:
+		print( "This is Supposed to be a Blank Box , But there is Text Present" )
 		return False
 	if shape.text_frame.text == " ":
+		print( "This is Supposed to be a Blank Box , But there is empty Text Present" )
 		return False
 
 	# 3.) Validate Shape is "rEcTanGULar" and appropriate size
 	# doesn't do a very good job, but 99% it works
 	if is_accepted_rectangular_form( shape ) == False:
+		print( "Not Rectangular Form" )
 		return False
 	return True
 
@@ -217,13 +229,15 @@ def get_shape_objects( input_path ):
 		for index , text_box in enumerate( PARSED_TEXT_BOXES ):
 			matching_blank_box = find_matching_blank_box( text_box , PARSED_BLANK_BOXES )
 			if matching_blank_box == False:
-				# print( "shapes didn't line up perfectly , you moved one on accident" )
-				# print( text_box )
+				print( "shapes didn't line up perfectly , you moved one on accident" )
+				print( text_box )
 				if STRICT_MODE == True:
+					print( "scrict mode enabled , exiting" )
 					sys.exit( 1 )
 			matching_boxes.append( [ text_box , matching_blank_box ] )
 		shape_objects.append( matching_boxes )
-
+	print( "Addon-Test-6" )
+	print( len( shape_objects ) )
 	return shape_objects
 
 def convert_power_point_raw_to_inches( raw ):
@@ -316,11 +330,17 @@ def compute( input_path , options ):
 		EXPORTED_HEIGHT = options[ "exported_height" ]
 	if "strict_mode" in options:
 		STRICT_MODE = options[ "strict_mode" ]
+
+	print( "Addon-Test-1" )
 	shape_objects_in_slides = get_shape_objects( input_path )
+	print( "Addon-Test-2" )
+	print( len( shape_objects_in_slides ) )
 	image_maps = []
 	for slide_index , shape_objects in enumerate( shape_objects_in_slides ):
+		print( "Addon-Test-3" )
 		if len( shape_objects ) < 1:
 			continue
+		print( "Addon-Test-4" )
 		html_map_string = f'<map name="image-map">\n'
 		for index , shape_object in enumerate( shape_objects ):
 			# print( f'\n{shape_object[ 0 ][ "text" ]} ===' )

@@ -2,7 +2,7 @@
 > Generates Drag-And-Drop and Typing Prompt Games from Placeholder Textboxes
 
 ## Local Generation - Docker Hub
-- https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server
+- https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-serverA
 1. Run `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
 2. Run :
 ```
@@ -42,3 +42,5 @@ sudo docker run -dit --restart="always" --name "public-ppt-interactive-generator
 - auto adjust image scale percentage based on viewport size
 - adjust bootstrap columns for drag and drop based on length of longest word
 - fix accidental double drop on correct answer overcount
+- add click to edit any textbox
+- deduce font size for each textbox

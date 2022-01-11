@@ -15,6 +15,7 @@ import utils
 import compute_image_maps
 
 OUR_BACKGROUND_TEXTBOX_HEX = "0070C0"
+OUR_BACKGROUND_TEXTBOX_RGB = [ 68 , 114 , 196 ]
 
 def is_rectangular( shape ):
 	if shape.width > shape.height:
@@ -126,6 +127,11 @@ if __name__ == "__main__":
 
 	input_path = Path( sys.argv[ 1 ] )
 	config = utils.read_json( sys.argv[ 2 ] )
+	if "parser" in config:
+		if "our_background_textbox_hex" in config[ "parser" ]:
+			OUR_BACKGROUND_TEXTBOX_HEX = config[ "parser" ][ "our_background_textbox_hex" ]
+		if "our_background_textbox_rgb" in config[ "parser" ]:
+			OUR_BACKGROUND_TEXTBOX_RGB = config[ "parser" ][ "our_background_textbox_rgb" ]
 
 	# 1.) Create Copy of PowerPoint With All text removed from boxes with correct fill color
 	p = Presentation( sys.argv[ 1 ] )
