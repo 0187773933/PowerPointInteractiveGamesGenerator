@@ -117,9 +117,8 @@ def get_updated_config( request ):
 
 	return config
 
-
-@app.route( "/local" , methods=[ "GET" ] )
-async def upload( request: Request ):
+@@app.route( "/host" , methods=[ "GET" ] ):
+async def host( request: Request ):
 	return sanic_html( f'''<!DOCTYPE html>
 <!DOCTYPE html>
 <html>
@@ -130,7 +129,54 @@ async def upload( request: Request ):
 </head>
 <body>
 	<h1>PowerPoint Interactive Local Game Generator - Stage 1</h1>
-	<h3>Instructions for Stage 1 </h3>
+	<h3>Instructions for Stage 1</h3>
+	<ol>
+		<li>Create a PowerPoint with TextBoxes that have all been filled with the same predetermined hex color</li>
+		<li>Upload that .pptx file here</li>
+		<li>Download Generated .pttx file that contain slides with the text removed</li>
+		<li><a href="/local/stage/2">Go to Stage 2</a></li>
+	</ol>
+	<form enctype="multipart/form-data" action="/local/stage/1" method="POST">
+		<input type="file" id="powerpoint" name="file"><br><br>
+		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
+		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
+		<span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
+		<span>Exported Slide Image DPI</span>&nbsp&nbsp<input type="text" id="exported_image_dpi" name="exported_image_dpi" placeholder="144"><br>
+		<span>Scale Percentage of Image</span>&nbsp&nbsp<input type="text" id="image_scale_percentage" name="image_scale_percentage" placeholder="60"><br>
+		<span>Unanswered Color Outline</span>&nbsp&nbsp<input type="text" id="unanswered_color" name="unanswered_color" placeholder="red"><br>
+		<span>Answered Color Outline</span>&nbsp&nbsp<input type="text" id="answered_color" name="answered_color" placeholder="#13E337"><br>
+		<span>Typing Text Color</span>&nbsp&nbsp<input type="text" id="text_color" name="text_color" placeholder="white"><br>
+		<span>Typing Text Font</span>&nbsp&nbsp<input type="text" id="text_font" name="text_font" placeholder="17px Arial"><br>
+		<span>Typing Text X-Offset</span>&nbsp&nbsp<input type="text" id="text_x_offset_factor" name="text_x_offset_factor" placeholder="2"><br>
+		<span>Typing Text Y-Offset</span>&nbsp&nbsp<input type="text" id="text_y_offset_factor" name="text_y_offset_factor" placeholder="3"><br>
+		<span>Base URL of Hosted HTML</span>&nbsp&nbsp<input type="text" size="60" id="base_hosted_url" name="base_hosted_url" placeholder="https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive"><br>
+		<span>CDN of Interactive Typing JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_typing_js" name="interactive_typing_js" placeholder="https://39363.org/CDN/NOTES/interactive_typing.js"><br>
+		<span>CDN of Interactive DragAndDrop JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_drag_and_drop_js" name="interactive_drag_and_drop_js" placeholder="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"><br>
+		<span>CDN of JQuery-UI CSS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_css" name="jquery_ui_css" placeholder="https://39363.org/CDN/jquery-ui.css"><br>
+		<span>CDN of JQuery-UI JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_js" name="jquery_ui_js" placeholder="https://39363.org/CDN/jquery-ui.min.js"><br>
+		<span>CDN of JQuery JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_js" name="jquery_js" placeholder="https://39363.org/CDN/jquery-3.6.0.min.js"><br>
+		<span>CDN of Bootstrap CSS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_css" name="bootstrap_css" placeholder="https://39363.org/CDN/bootstrap.min.css"><br>
+		<span>CDN of Bootstrap Bundle JS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_bundle" name="bootstrap_bundle" placeholder="https://39363.org/CDN/bootstrap.bundle.min.js"><br>
+		<br>
+		<input type="submit">
+	</form>
+</body>
+</html>''')
+
+
+@app.route( "/local" , methods=[ "GET" ] )
+async def local( request: Request ):
+	return sanic_html( f'''<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>PowerPoint - Interactive Game Generator</title>
+</head>
+<body>
+	<h1>PowerPoint Interactive Local Game Generator - Stage 1</h1>
+	<h3>Instructions for Stage 1</h3>
 	<ol>
 		<li>Create a PowerPoint with TextBoxes that have all been filled with the same predetermined hex color</li>
 		<li>Upload that .pptx file here</li>
