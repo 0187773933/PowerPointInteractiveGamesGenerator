@@ -1,7 +1,11 @@
 import sys
 import json
+import base64
 from pathlib import Path
 from natsort import humansorted
+
+import nacl.secret
+import nacl.utils
 
 from pptx import Presentation
 from copy import deepcopy
@@ -12,6 +16,25 @@ from pptx.util import Inches , Pt
 from pptx.oxml import parse_xml
 from pptx.dml.color import _NoneColor , RGBColor
 
+def base64_encode( message ):
+	try:
+		message_bytes = message.encode( 'utf-8' )
+		base64_bytes = base64.b64encode( message_bytes )
+		base64_message = base64_bytes.decode( 'utf-8' )
+		return base64_message
+	except Exception as e:
+		print( e )
+		return False
+
+def base64_decode( base64_message ):
+	try:
+		base64_bytes = base64_message.encode( 'utf-8' )
+		message_bytes = base64.b64decode(base64_bytes)
+		message = message_bytes.decode( 'utf-8' )
+		return message
+	except Exception as e:
+		print( e )
+		return False
 
 def write_json( file_path , python_object ):
 	with open( file_path , 'w', encoding='utf-8' ) as f:
@@ -26,6 +49,24 @@ def enumerate2( xs , start=0 , step=1 ):
 	for x in xs:
 		yield ( start , x )
 		start += step
+
+def secret_box_generate_new_key():
+	key = nacl.utils.random( nacl.secret.SecretBox.KEY_SIZE )
+	key_b64 = base64.b64encode( key ).decode( "utf-8" )
+	print( f"Human Readable Key \t=== {key_b64}" )
+
+def secret_box_seal( key_base64 , plain_text_message ):
+	box = nacl.secret.SecretBox( base64.b64decode( key_base64 ) )
+	encrypted = box.encrypt( bytes( plain_text_message , "utf-8" ) )
+	encrypted_b64 = base64.b64encode( encrypted ).decode( "utf-8" )
+	return encrypted_b64
+
+def secret_box_open( key_b64 , encrypted_message ):
+	key_bytes = base64.b64decode( key_b64 )
+	encrypted_message_bytes = base64.b64decode( encrypted_message )
+	box = nacl.secret.SecretBox( key_bytes )
+	plaintext = box.decrypt( encrypted_message_bytes ).decode( "utf-8" )
+	return plaintext
 
 # https://stackoverflow.com/a/49111747
 def get_nested_dictionary_value( d , l , default_val=None ):

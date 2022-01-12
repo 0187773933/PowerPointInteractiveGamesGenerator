@@ -2,6 +2,7 @@
 import sys
 import uuid
 import time
+import json
 import base64
 from pathlib import Path
 from pprint import pprint
@@ -409,39 +410,72 @@ async def test_upload_stage_2( request ):
 			print( uploaded_powerpoint_path )
 			print( image_paths )
 
-			## 5-Addon.) Generate ULID for each ImagePath
+			# 5.) Copy Uploaded Images to Hosted Storage Directory
+			output_images_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] )
+			output_blob_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] )
+			image_ulids = []
+			for index , image_path in enumerate( image_paths ):
+				#shutil.copyfile( image_path , output_images_path.joinpath( image_path.name ) )
+				## Addon , encrypt images
+				with open( str( image_path ) , "rb" ) as img_file:
+					image_bytes = img_file.read()
+					image_bytes_b64_bytes = base64.b64encode( image_bytes )
+					image_bytes_b64_string = image_bytes_b64_bytes.decode()
+					image_ulid = str( ULID() )
+					image_ulids.append( image_ulid )
+					print( type( image_bytes_b64_string ) )
+					utils.write_json( str( output_images_path.joinpath( f"{image_ulid}.json" ) ) , {
+						"sealed": utils.secret_box_seal( config[ "image_upload_server_imgur_version" ][ "secret_box_key" ] , image_bytes_b64_string )
+					})
+					print( "3" )
+			print( "5" )
+
+			# 6.) Compute Image Maps
+			image_maps_in_slides = compute_image_maps.compute( str( uploaded_powerpoint_path ) , config[ "parser" ] )
+			print( len( image_maps_in_slides ) )
+			if len( image_paths ) != len( image_maps_in_slides ):
+				print( "Lengths of Slide Images and Slide Image Maps Don't Match" )
+				# print( "This could mean some slides don't have any thing but" )
+				sys.exit( 1 )
+
+
+			## Addon.) Create "blob" object that can just be passed either to DragAndDrop or Typing HTML file
+			## Contains image-maps , encrypted hosted-image-file-path objects , ALWAYS maintain expansion opportunity , add meta
+			## Addon.) Generate ULID for each ImagePath
 			## 			 Then , seal ULID in a JWT Token , this will be appended as a url parameter ?p="asdf"
 			# https://pyjwt.readthedocs.io/en/latest/usage.html
+			# https://pyjwt.readthedocs.io/en/latest/algorithms.html?highlight=algorithm
+			# Ran into problems with RS512 ,
+			# you can generate a keypair : openssl ecparam -name secp521r1 -genkey -noout -out private.ec.key
+			# and then store it base64 encoded in config.json
+			# , but on mac osx where we are testing : '_EllipticCurvePrivateKey' object has no attribute 'verify'
+			# so changed back to HS512
+			print( "here-1" )
+			blob = { "slide_objects": [] }
+			blob_ulid = str( ULID() )
+			blob_file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] ).joinpath( f"{blob_ulid}.json" )
 			for index , image_path in enumerate( image_paths ):
-				ulid = str( ULID() )
-				token = jwt.encode( { "path": ulid } , "secret" , algorithm="HS256" )
-				print( f"{token} === {ulid}" )
+				# ulid = str( ULID() )
+				# file_path = f"{ulid}.jpeg"
+				# token = jwt.encode({ "blob_ulid": blob_ulid } ,
+				# 	# utils.base64_decode( config[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				# 	config[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				# 	algorithm=config[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+				# )
+				# print( f"{token.decode( 'utf-8' )} === {ulid}" )
+				blob[ "slide_objects" ].append({
+					"image_map": image_maps_in_slides[ index ] ,
+					# "token": token.decode( "utf-8" ) ,
+					"image_ulid": image_ulids[ index ]
+				})
+			pprint( blob )
 
-			# # 5.) Create Placeholder Output Directories
-			# # generated_output_base_path = temp_dir_posix.joinpath( f"{input_file_name_stem} - Interactive" )
-			# generated_output_base_path = temp_dir_posix.joinpath( f"Interactive" )
-			# generated_output_base_path.mkdir( parents=True , exist_ok=True )
-			# output_images_path = generated_output_base_path.joinpath( "images" )
-			# output_images_path.mkdir( parents=True , exist_ok=True )
-			# output_html_path = generated_output_base_path.joinpath( "html" )
-			# output_html_path.mkdir( parents=True , exist_ok=True )
-			# print( output_images_path )
-			# for index , image_path in enumerate( image_paths ):
-			# 	shutil.copyfile( image_path , output_images_path.joinpath( image_path.name ) )
-			# output_js_path = generated_output_base_path.joinpath( "js" )
-			# shutil.copytree( "./js" , output_js_path )
-			# output_js_path.mkdir( parents=True , exist_ok=True )
-			# output_css_path = generated_output_base_path.joinpath( "css" )
-			# shutil.copytree( "./css" , output_css_path )
-			# output_css_path.mkdir( parents=True , exist_ok=True )
-
-			# image_maps_in_slides = compute_image_maps.compute( str( uploaded_powerpoint_path ) , config[ "parser" ] )
-			# print( len( image_maps_in_slides ) )
-
-			# if len( image_paths ) != len( image_maps_in_slides ):
-			# 	print( "Lengths of Slide Images and Slide Image Maps Don't Match" )
-			# 	# print( "This could mean some slides don't have any thing but" )
-			# 	sys.exit( 1 )
+			blob_json_str = json.dumps( blob )
+			blob_json_b64 = utils.base64_encode( blob_json_str )
+			utils.write_json( str( blob_file_path ) , {
+				"sealed": utils.secret_box_seal( config[ "image_upload_server_imgur_version" ][ "secret_box_key" ] , blob_json_b64 )
+			})
+			print( blob_ulid )
 
 			# print( "here 2" )
 			# image_objects = []
@@ -479,6 +513,34 @@ async def test_upload_stage_2( request ):
 			# 	filename=f"{generated_output_base_path.stem}.zip"
 			# )
 			return sanic_json( dict( testing="unfinished , figuring out where to upload and serve images , with keys and such , routing" ) , status=200 )
+	except Exception as e:
+		print( e )
+		return sanic_json( dict( failed=str( e ) ) , status=200 )
+
+@app.route( "/test/host/image" , methods=[ "GET" ] )
+async def local( request: Request ):
+	try:
+		token = request.args.get( "t" )
+		if token == None:
+			return sanic_json( dict( failed="no token" ) , status=200 )
+		decoded = False
+		try:
+			decoded = jwt.decode(
+				token ,
+				# utils.base64_decode( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				algorithm=DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+			)
+		except Exception as decode_error:
+			print( decode_error )
+			return sanic_json( dict( failed=str( decode_error ) ) , status=200 )
+		if "path" not in decoded:
+			return sanic_json( dict( failed="no path" ) , status=200 )
+		file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] ).joinpath( decoded[ "path" ] )
+		print( file_path )
+		if file_path.is_file() == False:
+			return sanic_json( dict( failed="file doesn't exist" ) , status=200 )
+		return await sanic_file( str( file_path ) )
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
