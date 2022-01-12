@@ -128,15 +128,15 @@ async def host( request: Request ):
 	<title>PowerPoint - Interactive Game Generator</title>
 </head>
 <body>
-	<h1>PowerPoint Interactive Local Game Generator - Stage 1</h1>
+	<h1>PowerPoint Interactive Hosted Game Generator - Stage 1</h1>
 	<h3>Instructions for Stage 1</h3>
 	<ol>
 		<li>Create a PowerPoint with TextBoxes that have all been filled with the same predetermined hex color</li>
 		<li>Upload that .pptx file here</li>
 		<li>Download Generated .pttx file that contain slides with the text removed</li>
-		<li><a href="/local/stage/2">Go to Stage 2</a></li>
+		<li><a href="/host/stage/2">Go to Stage 2</a></li>
 	</ol>
-	<form enctype="multipart/form-data" action="/local/stage/1" method="POST">
+	<form enctype="multipart/form-data" action="/host/stage/1" method="POST">
 		<input type="file" id="powerpoint" name="file"><br><br>
 		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
 		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
@@ -162,6 +162,65 @@ async def host( request: Request ):
 	</form>
 </body>
 </html>''')
+
+@app.post( "/host/stage/1" , stream=True )
+async def generate_host_stage_one( request ):
+	try:
+		start_time = time.time()
+		result = bytes()
+		print( "Uploading Host Stage 1 File" )
+		while True:
+			body = await request.stream.read()
+			if body is None:
+				break
+			result += body
+		# print( result )
+		end_time = time.time()
+		duration = round( end_time - start_time )
+		duration_minutes = ( duration / 60 )
+		durating_seconds = ( duration % 60 )
+		print( request.stream )
+		print( f"Upload Took {duration_minutes} minutes and {durating_seconds} seconds" )
+		config = get_updated_config( request )
+		with tempfile.TemporaryDirectory() as temp_dir:
+			temp_dir_posix = Path( temp_dir )
+			input_file_path = temp_dir_posix.joinpath( "input.pptx" )
+			output_powerpoint_path = temp_dir_posix.joinpath( f"Blank.pptx" )
+
+			# 1.) Read Sent Bytes into .pptx file inside temp directory
+			with open( str( input_file_path ) , "wb" ) as file:
+				file.write( result )
+			print( input_file_path )
+			print( input_file_path.stat() )
+
+			# 2.) Create Copy of PowerPoint With All text removed from boxes with correct fill color
+			p = Presentation( input_file_path )
+			p_clone = deepcopy( p )
+			for slide_index , slide in enumerate( p_clone.slides ):
+				for shape_index , shape in enumerate( slide.shapes ):
+					if utils.validate_text_box( shape , config[ "parser" ][ "our_background_textbox_hex" ] ):
+						print( f"{slide_index} === {shape_index} === valid text box" )
+						shape.text_frame.text = ""
+			p_clone.save( str( output_powerpoint_path ) )
+			print( output_powerpoint_path )
+			print( output_powerpoint_path.stat() )
+			return await sanic_file(
+				str( output_powerpoint_path ) ,
+				mime_type="application/vnd.openxmlformats-officedocument.presentationml.presentation" ,
+				filename=output_powerpoint_path.name
+			)
+			# Can't stream back because we are in temp file land , and it already deletes somehow idk
+			# return await sanic_file_stream(
+			# 	str( output_powerpoint_path ) ,
+			# 	status=200 ,
+			# 	chunk_size=4096 ,
+			# 	mime_type="application/vnd.openxmlformats-officedocument.presentationml.presentation" ,
+			# 	headers={ "Content-Length": str( input_file_path.stat().st_size ) } ,
+			# 	filename=output_powerpoint_path.name ,
+			# )
+	except Exception as e:
+		print( e )
+		return sanic_json( dict( failed=str( e ) ) , status=200 )
 
 
 @app.route( "/local" , methods=[ "GET" ] )

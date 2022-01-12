@@ -34,6 +34,41 @@ BOOTSTRAP_CSS_INTEGRITY = ""
 BOOTSTRAP_JS_INTEGRITY = ""
 JQUERY_UI_JS_INTEGRITY = ""
 
+def build_drag_and_drop_blob_html( options ):
+	return f'''<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{options["title"]}</title>
+	<link rel="stylesheet" href="{options["cdn"]["jquery_ui_css"]["url"]}" integrity="{options["cdn"]["jquery_ui_css"]["integrity"]}" >
+	<script src="{options["cdn"]["jquery_js"]["url"]}" integrity="{options["cdn"]["jquery_js"]["integrity"]}"></script>
+	<link rel="stylesheet" href="{options["cdn"]["bootstrap_css"]["url"]}" integrity="{options["cdn"]["bootstrap_css"]["integrity"]}">
+	<script src="{options["cdn"]["bootstrap_bundle"]["url"]}" integrity="{options["cdn"]["bootstrap_bundle"]["integrity"]}"></script>
+	<script src="{options["cdn"]["jquery_ui_js"]["url"]}" integrity="{options["cdn"]["jquery_ui_js"]["integrity"]}" ></script>
+</head>
+<body>
+	<div id="label-container"></div>
+	<div class="container">
+		<div class="row justify-content-start">
+			<div class="col-2">
+				<div id="draggable-label-container"></div>
+			</div>
+			<div class="col-10">
+				<canvas id="interactive-image-canvas"></canvas>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function load() {{ /*start_interactive_drag_and_drop(); */ console.log( "unfinished" ); }}
+		let interactive_drag_and_drop_script = document.createElement( "script" );
+		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]}?v=" + ( new Date() ).getTime() );
+		interactive_drag_and_drop_script.onload = load;
+		document.head.appendChild( interactive_drag_and_drop_script );
+	</script>
+</body>
+</html>'''
+
 def build_drag_and_drop_html( options ):
 	return f'''<!DOCTYPE html>
 <html>

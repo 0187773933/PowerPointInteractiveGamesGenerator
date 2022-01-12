@@ -13,6 +13,7 @@ import requests
 from binascii import b2a_hex
 
 from sanic import Sanic
+from sanic import Blueprint
 from sanic.response import html as sanic_html
 from sanic.response import json as sanic_json
 from sanic.response import file as sanic_file
@@ -48,6 +49,11 @@ app = Sanic( __name__ )
 # pip install python-magic-bin
 mime = magic.Magic( mime=True )
 DEFAULT_CONFIG = utils.read_json( sys.argv[1] )
+
+app.static( "/test/host/static/js" , "./js" )
+app.static( "/test/host/static/css" , "./css" )
+
+# app.static( "/css" , "./css" )
 
 # https://sanic-jwt-extended.seonghyeon.dev/config_options.html
 # https://pyjwt.readthedocs.io/en/latest/algorithms.html
@@ -464,7 +470,7 @@ async def test_upload_stage_2( request ):
 			# , but on mac osx where we are testing : '_EllipticCurvePrivateKey' object has no attribute 'verify'
 			# so changed back to HS512
 			print( "here-1" )
-			blob = { "slide_objects": [] }
+			blob = { "title": file_name_stem , "slide_objects": [] }
 			blob_ulid = str( ULID() )
 			blob_file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] ).joinpath( f"{blob_ulid}.json" )
 			for index , image_path in enumerate( image_paths ):
@@ -609,8 +615,22 @@ async def local( request: Request ):
 		## we are going to have to make a new version of interactive_drag_and_drop.js and interactive_typing.js
 		## so that they support the "blob" , and advance and previous work on arrrow keys
 		## images get pulled via ulids --> decrypt sealed image base64 string --> render
-
-		return sanic_json( dict( testing="in progress" ) , status=200 )
+		html_options = DEFAULT_CONFIG[ "html" ]
+		html_options[ "cdn" ][ "jquery_ui_css" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/css/jquery-ui.css"
+		html_options[ "cdn" ][ "jquery_ui_js" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/jquery-ui.min.js"
+		html_options[ "cdn" ][ "jquery_js" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/jquery-3.6.0.min.js"
+		html_options[ "cdn" ][ "bootstrap_css" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/css/bootstrap.min.css"
+		html_options[ "cdn" ][ "bootstrap_bundle" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/bootstrap.bundle.min.js"
+		html_options[ "cdn" ][ "interactive_typing_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_typing_blob.js"
+		html_options[ "cdn" ][ "interactive_drag_and_drop_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_drag_and_drop_blob.js"
+		html_options[ "title" ] = blob[ "title" ]
+		print( html_options )
+		# html_options[ "images" ] = image_objects
+		# html_options[ "output_base_dir" ] = output_html_path
+		# interactive_notes_generator.generate( html_options , False )
+		html = interactive_notes_generator.build_drag_and_drop_blob_html( html_options )
+		return sanic_html( html )
+		# return sanic_json( dict( testing="in progress" ) , status=200 )
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
