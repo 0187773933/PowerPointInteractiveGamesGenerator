@@ -498,8 +498,9 @@ async def test_upload_stage_2( request ):
 			)
 			token_string = token.decode( "utf-8" )
 
-			drag_and_drop_url = f"{config[ "html"][ "base_hosted_url" ]}/DragAndDrop/{token_string}"
-			typing_url = f"{config[ "html"][ "base_hosted_url" ]}/DragAndDrop/{token_string}"
+			print( "\n" )
+			drag_and_drop_url = f'{config[ "html"][ "base_hosted_url" ]}/DragAndDrop?t={token_string}'
+			typing_url = f'{config[ "html"][ "base_hosted_url" ]}/Typing?t={token_string}'
 			print( drag_and_drop_url )
 			print( "\n" )
 			print( typing_url )
@@ -572,7 +573,7 @@ async def local( request: Request ):
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
 
-@app.route( "/test/host/drag-and-drop" , methods=[ "GET" ] )
+@app.route( "/test/host/DragAndDrop" , methods=[ "GET" ] )
 async def local( request: Request ):
 	try:
 		token = request.args.get( "t" )
@@ -589,13 +590,22 @@ async def local( request: Request ):
 		except Exception as decode_error:
 			print( decode_error )
 			return sanic_json( dict( failed=str( decode_error ) ) , status=200 )
-		if "path" not in decoded:
-			return sanic_json( dict( failed="no path" ) , status=200 )
-		file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] ).joinpath( decoded[ "path" ] )
-		print( file_path )
-		if file_path.is_file() == False:
+		if "blob_ulid" not in decoded:
+			return sanic_json( dict( failed="no blob ulid" ) , status=200 )
+		if "key" not in decoded:
+			return sanic_json( dict( failed="no key" ) , status=200 )
+		blob_file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] ).joinpath( f"{decoded[ 'blob_ulid' ]}.json" )
+		if blob_file_path.is_file() == False:
 			return sanic_json( dict( failed="file doesn't exist" ) , status=200 )
-		return await sanic_file( str( file_path ) )
+		blob = utils.read_json( str( blob_file_path ) )
+		if "sealed" not in blob:
+			return sanic_json( dict( failed="nothing sealed ???" ) , status=200 )
+
+		opened_base64 = utils.secret_box_open( decoded[ "key" ] , blob[ "sealed" ] )
+		blob = json.loads( base64.b64decode( opened_base64 ) )
+		pprint( blob )
+
+		return sanic_json( dict( testing="in progress" ) , status=200 )
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
