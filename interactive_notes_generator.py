@@ -48,7 +48,7 @@ def build_drag_and_drop_blob_html( options ):
 	<script src="{options["cdn"]["jquery_ui_js"]["url"]}" integrity="{options["cdn"]["jquery_ui_js"]["integrity"]}" ></script>
 </head>
 <body>
-	<div id="label-container"></div>
+	<div id="image-map-container"></div>
 	<div class="container">
 		<div class="row justify-content-start">
 			<div class="col-2">
@@ -59,6 +59,10 @@ def build_drag_and_drop_blob_html( options ):
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		let blob = {options["blob"]};
+		console.log( blob );
+	</script>
 	<script type="text/javascript">
 		function load() {{ /*start_interactive_drag_and_drop(); */ console.log( "unfinished" ); }}
 		let interactive_drag_and_drop_script = document.createElement( "script" );

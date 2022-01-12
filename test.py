@@ -624,6 +624,8 @@ async def local( request: Request ):
 		html_options[ "cdn" ][ "interactive_typing_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_typing_blob.js"
 		html_options[ "cdn" ][ "interactive_drag_and_drop_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_drag_and_drop_blob.js"
 		html_options[ "title" ] = blob[ "title" ]
+		html_options[ "blob" ] = blob
+
 		print( html_options )
 		# html_options[ "images" ] = image_objects
 		# html_options[ "output_base_dir" ] = output_html_path
