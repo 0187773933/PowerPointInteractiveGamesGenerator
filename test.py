@@ -605,6 +605,11 @@ async def local( request: Request ):
 		blob = json.loads( base64.b64decode( opened_base64 ) )
 		pprint( blob )
 
+		## Now just generate on-the-fly html for drag and drop , and send
+		## we are going to have to make a new version of interactive_drag_and_drop.js and interactive_typing.js
+		## so that they support the "blob" , and advance and previous work on arrrow keys
+		## images get pulled via ulids --> decrypt sealed image base64 string --> render
+
 		return sanic_json( dict( testing="in progress" ) , status=200 )
 	except Exception as e:
 		print( e )
