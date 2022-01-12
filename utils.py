@@ -54,6 +54,7 @@ def secret_box_generate_new_key():
 	key = nacl.utils.random( nacl.secret.SecretBox.KEY_SIZE )
 	key_b64 = base64.b64encode( key ).decode( "utf-8" )
 	print( f"Human Readable Key \t=== {key_b64}" )
+	return key_b64
 
 def secret_box_seal( key_base64 , plain_text_message ):
 	box = nacl.secret.SecretBox( base64.b64decode( key_base64 ) )

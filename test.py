@@ -88,6 +88,12 @@ def get_updated_config( request ):
 	update_config_with_form_key( request , "jquery_js" , config , [ "html" , "cdn" , "jquery_js" , "url" ] )
 	update_config_with_form_key( request , "bootstrap_css" , config , [ "html" , "cdn" , "bootstrap_css" , "url" ] )
 	update_config_with_form_key( request , "bootstrap_bundle" , config , [ "html" , "cdn" , "bootstrap_bundle" , "url" ] )
+
+	## Addon
+	# secret_key = request.form.get( "secret_key" )
+	# if item != None and len( item ) > 0:
+	# 	config[ "secret_key" ] = secret_key
+	# just generate new secret key every time
 	return config
 
 @app.route( "/" , methods=[ "GET" ] )
@@ -311,6 +317,9 @@ async def test_upload_stage_2( request: Request ):
 	</ol>
 	<form enctype="multipart/form-data" action="/test/host/stage/2" method="POST">
 		<input type="file" id="powerpoint" name="file"><br><br>
+
+		<span>Secret Key</span>&nbsp&nbsp<input type="text" id="secret_key" name="secret_key" placeholder="enter a randomly generated passphrase here"><br><br>
+
 		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
 		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
 		<span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
@@ -410,6 +419,10 @@ async def test_upload_stage_2( request ):
 			print( uploaded_powerpoint_path )
 			print( image_paths )
 
+			## Addon , generate secret box key unique to this .pptx
+			SECRET_BOX_KEY = utils.secret_box_generate_new_key()
+			print( SECRET_BOX_KEY )
+
 			# 5.) Copy Uploaded Images to Hosted Storage Directory
 			output_images_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] )
 			output_blob_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] )
@@ -425,7 +438,7 @@ async def test_upload_stage_2( request ):
 					image_ulids.append( image_ulid )
 					print( type( image_bytes_b64_string ) )
 					utils.write_json( str( output_images_path.joinpath( f"{image_ulid}.json" ) ) , {
-						"sealed": utils.secret_box_seal( config[ "image_upload_server_imgur_version" ][ "secret_box_key" ] , image_bytes_b64_string )
+						"sealed": utils.secret_box_seal( SECRET_BOX_KEY , image_bytes_b64_string )
 					})
 					print( "3" )
 			print( "5" )
@@ -473,9 +486,23 @@ async def test_upload_stage_2( request ):
 			blob_json_str = json.dumps( blob )
 			blob_json_b64 = utils.base64_encode( blob_json_str )
 			utils.write_json( str( blob_file_path ) , {
-				"sealed": utils.secret_box_seal( config[ "image_upload_server_imgur_version" ][ "secret_box_key" ] , blob_json_b64 )
+				"sealed": utils.secret_box_seal( SECRET_BOX_KEY , blob_json_b64 )
 			})
 			print( blob_ulid )
+
+
+			token = jwt.encode({ "blob_ulid": blob_ulid , "key": SECRET_BOX_KEY } ,
+				# utils.base64_decode( config[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				config[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				algorithm=config[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+			)
+			token_string = token.decode( "utf-8" )
+
+			drag_and_drop_url = f"{config[ "html"][ "base_hosted_url" ]}/DragAndDrop/{token_string}"
+			typing_url = f"{config[ "html"][ "base_hosted_url" ]}/DragAndDrop/{token_string}"
+			print( drag_and_drop_url )
+			print( "\n" )
+			print( typing_url )
 
 			# print( "here 2" )
 			# image_objects = []
@@ -518,6 +545,34 @@ async def test_upload_stage_2( request ):
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
 
 @app.route( "/test/host/image" , methods=[ "GET" ] )
+async def local( request: Request ):
+	try:
+		token = request.args.get( "t" )
+		if token == None:
+			return sanic_json( dict( failed="no token" ) , status=200 )
+		decoded = False
+		try:
+			decoded = jwt.decode(
+				token ,
+				# utils.base64_decode( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				algorithm=DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+			)
+		except Exception as decode_error:
+			print( decode_error )
+			return sanic_json( dict( failed=str( decode_error ) ) , status=200 )
+		if "path" not in decoded:
+			return sanic_json( dict( failed="no path" ) , status=200 )
+		file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] ).joinpath( decoded[ "path" ] )
+		print( file_path )
+		if file_path.is_file() == False:
+			return sanic_json( dict( failed="file doesn't exist" ) , status=200 )
+		return await sanic_file( str( file_path ) )
+	except Exception as e:
+		print( e )
+		return sanic_json( dict( failed=str( e ) ) , status=200 )
+
+@app.route( "/test/host/drag-and-drop" , methods=[ "GET" ] )
 async def local( request: Request ):
 	try:
 		token = request.args.get( "t" )
