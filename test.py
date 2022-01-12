@@ -15,6 +15,7 @@ from binascii import b2a_hex
 from sanic import Sanic
 from sanic import Blueprint
 from sanic.response import html as sanic_html
+from sanic.response import raw as sanic_raw
 from sanic.response import json as sanic_json
 from sanic.response import file as sanic_file
 from sanic.response import file_stream as sanic_file_stream
@@ -323,9 +324,6 @@ async def test_upload_stage_2( request: Request ):
 	</ol>
 	<form enctype="multipart/form-data" action="/test/host/stage/2" method="POST">
 		<input type="file" id="powerpoint" name="file"><br><br>
-
-		<span>Secret Key</span>&nbsp&nbsp<input type="text" id="secret_key" name="secret_key" placeholder="enter a randomly generated passphrase here"><br><br>
-
 		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
 		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
 		<span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
@@ -550,6 +548,41 @@ async def test_upload_stage_2( request ):
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
+
+
+@app.route( "/test/host/image/<ulid:str>" , methods=[ "GET" ] )
+async def local( request: Request , ulid: str ):
+	try:
+		token = request.args.get( "t" )
+		if token == None:
+			return sanic_json( dict( failed="no token" ) , status=200 )
+		decoded = False
+		try:
+			decoded = jwt.decode(
+				token ,
+				# utils.base64_decode( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				algorithm=DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+			)
+		except Exception as decode_error:
+			print( decode_error )
+			return sanic_json( dict( failed=str( decode_error ) ) , status=200 )
+		if "key" not in decoded:
+			return sanic_json( dict( failed="no key sent in token" ) , status=200 )
+		encrypted_json_file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_image_storage_path" ] ).joinpath( f"{ulid}.json" )
+		if encrypted_json_file_path.is_file() == False:
+			return sanic_json( dict( failed="file doesn't exist" ) , status=200 )
+		encrypted_json = utils.read_json( str( encrypted_json_file_path ) )
+		if "sealed" not in encrypted_json:
+			return sanic_json( dict( failed="nothing sealed" ) , status=200 )
+		opened_base64 = utils.secret_box_open( decoded[ "key" ] , encrypted_json[ "sealed" ] )
+		image_bytes = base64.b64decode( opened_base64 )
+		# https://github.com/sanic-org/sanic/blob/main/sanic/response.py#L248
+		return sanic_raw( image_bytes , status=200 , headers={ "Content-Type": "image/jpeg" } )
+	except Exception as e:
+		print( e )
+		return sanic_json( dict( failed=str( e ) ) , status=200 )
+
 
 @app.route( "/test/host/image" , methods=[ "GET" ] )
 async def local( request: Request ):

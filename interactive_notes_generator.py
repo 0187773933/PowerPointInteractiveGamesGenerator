@@ -60,11 +60,11 @@ def build_drag_and_drop_blob_html( options ):
 		</div>
 	</div>
 	<script type="text/javascript">
-		let blob = {options["blob"]};
-		console.log( blob );
+		window.blob = {options["blob"]};
+		window.CURRENT_SLIDE_INDEX = 0;
 	</script>
 	<script type="text/javascript">
-		function load() {{ /*start_interactive_drag_and_drop(); */ console.log( "unfinished" ); }}
+		function load() {{ start_interactive_drag_and_drop_blob(); }}
 		let interactive_drag_and_drop_script = document.createElement( "script" );
 		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]}?v=" + ( new Date() ).getTime() );
 		interactive_drag_and_drop_script.onload = load;

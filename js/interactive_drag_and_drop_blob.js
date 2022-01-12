@@ -1,4 +1,4 @@
-function start_interactive_drag_and_drop() {
+function start_interactive_drag_and_drop_blob() {
 	// window.addEventListener( "scroll" , function() {
 	// 	window.scrollTo( 0 , 0 );
 	// });
@@ -11,37 +11,48 @@ function start_interactive_drag_and_drop() {
 	// https://www.w3schools.com/tags/att_area_coords.asp
 	function init() {
 
-		let image_source_url = window.image_source_url;
-		let image_scale_percentage = window.image_scale_percentage;
-		let unanswered_color = window.unanswered_color;
-		let answered_color = window.answered_color;
-		let text_color = window.text_color;
-		let text_font = window.text_font;
-		let text_x_offset_factor = window.text_x_offset_factor;
-		let text_y_offset_factor = window.text_y_offset_factor;
-		let next_challenge_url = window.next_challenge_url;
+		let image_source_url;
+		let image_scale_percentage;
+		let unanswered_color;
+		let answered_color;
+		let text_color;
+		let text_font;
+		let text_x_offset_factor;
+		let text_y_offset_factor;
+		let next_challenge_url;
 
+		let width_scale_percentage;
+		let height_scale_percentage;
 
-		let width_scale_percentage = ( image_scale_percentage / 100 );
-		let height_scale_percentage = ( image_scale_percentage / 100 );
+		let canvas;
+		let context;
+		let image;
+		let scaled_x;
+		let scaled_y;
 
-		let canvas = document.getElementById( "interactive-image-canvas" );
-		let context = canvas.getContext( "2d" );
-		let image = new Image();
-		let scaled_x = 0;
-		let scaled_y = 0;
-		image.addEventListener( "load" , function() {
-			// idk man
-			// https://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly#19262385
-			scaled_x = ( image.width * width_scale_percentage );
-			scaled_y = ( image.height * height_scale_percentage );
-			canvas.width = scaled_x;
-			canvas.height = scaled_y;
-			context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
-			add_areas();
-		});
-		// https://www.image-map.net/
-		image.src = image_source_url;
+		function load_current_slide_image_object() {
+			let canvas = document.getElementById( "interactive-image-canvas" );
+			let context = canvas.getContext( "2d" );
+			let image = new Image();
+			let scaled_x = 0;
+			let scaled_y = 0;
+			image.addEventListener( "load" , function() {
+				// idk man
+				// https://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly#19262385
+				scaled_x = ( image.width * width_scale_percentage );
+				scaled_y = ( image.height * height_scale_percentage );
+				canvas.width = scaled_x;
+				canvas.height = scaled_y;
+				context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
+				add_areas();
+			});
+			// https://www.image-map.net/
+			image.src = image_source_url;
+		}
+		console.log( window.blob );
+		console.log( window.CURRENT_SLIDE_INDEX );
+		load_current_slide_image_object();
+
 
 		function draw_line( x1 , y1 , x2 , y2 ) {
 			context.beginPath();
