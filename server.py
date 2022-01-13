@@ -70,11 +70,14 @@ app.static( "/host/static/css" , "./css" )
 
 def update_config_with_form_key( request , form_key , config , *config_keys ):
 	item = request.form.get( form_key )
+	print( item )
 	if item != None and len( item ) > 0:
 		utils.set_nested_dictionary_value( config , config_keys , item )
 def get_updated_config( request ):
+	print( request.form )
 	config = DEFAULT_CONFIG
 	if hasattr( request , "form" ) == False:
+		print( "no form ??" )
 		return config
 	update_config_with_form_key( request , "background_color" , config , [ "parser" , "our_background_textbox_hex" ] )
 	update_config_with_form_key( request , "exported_width" , config , [ "parser" , "exported_width" ] )
@@ -101,6 +104,7 @@ def get_updated_config( request ):
 	# if item != None and len( item ) > 0:
 	# 	config[ "secret_key" ] = secret_key
 	# just generate new secret key every time
+	pprint( config )
 	return config
 
 @app.route( "/" , methods=[ "GET" ] )
@@ -137,37 +141,54 @@ async def local( request: Request ):
 		<li>Download Generated .pttx file that contain slides with the text removed</li>
 		<li><a href="/host/stage/2">Go to Stage 2</a></li>
 	</ol>
-	<form enctype="multipart/form-data" action="/host/stage/1" method="POST">
+	<form id="our-form" enctype="multipart/form-data" action="/host/stage/1" method="POST" onsubmit="on_submit();">
 		<input type="file" id="powerpoint" name="file"><br><br>
-		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
-		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
-		<span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
-		<span>Exported Slide Image DPI</span>&nbsp&nbsp<input type="text" id="exported_image_dpi" name="exported_image_dpi" placeholder="144"><br>
-		<span>Scale Percentage of Image</span>&nbsp&nbsp<input type="text" id="image_scale_percentage" name="image_scale_percentage" placeholder="60"><br>
-		<span>Unanswered Color Outline</span>&nbsp&nbsp<input type="text" id="unanswered_color" name="unanswered_color" placeholder="red"><br>
-		<span>Answered Color Outline</span>&nbsp&nbsp<input type="text" id="answered_color" name="answered_color" placeholder="#13E337"><br>
-		<span>Typing Text Color</span>&nbsp&nbsp<input type="text" id="text_color" name="text_color" placeholder="white"><br>
-		<span>Typing Text Font</span>&nbsp&nbsp<input type="text" id="text_font" name="text_font" placeholder="17px Arial"><br>
-		<span>Typing Text X-Offset</span>&nbsp&nbsp<input type="text" id="text_x_offset_factor" name="text_x_offset_factor" placeholder="2"><br>
-		<span>Typing Text Y-Offset</span>&nbsp&nbsp<input type="text" id="text_y_offset_factor" name="text_y_offset_factor" placeholder="3"><br>
-		<span>Base URL of Hosted HTML</span>&nbsp&nbsp<input type="text" size="60" id="base_hosted_url" name="base_hosted_url" placeholder="https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive"><br>
-		<span>CDN of Interactive Typing JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_typing_js" name="interactive_typing_js" placeholder="https://39363.org/CDN/NOTES/interactive_typing.js"><br>
-		<span>CDN of Interactive DragAndDrop JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_drag_and_drop_js" name="interactive_drag_and_drop_js" placeholder="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"><br>
-		<span>CDN of JQuery-UI CSS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_css" name="jquery_ui_css" placeholder="https://39363.org/CDN/jquery-ui.css"><br>
-		<span>CDN of JQuery-UI JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_js" name="jquery_ui_js" placeholder="https://39363.org/CDN/jquery-ui.min.js"><br>
-		<span>CDN of JQuery JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_js" name="jquery_js" placeholder="https://39363.org/CDN/jquery-3.6.0.min.js"><br>
-		<span>CDN of Bootstrap CSS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_css" name="bootstrap_css" placeholder="https://39363.org/CDN/bootstrap.min.css"><br>
-		<span>CDN of Bootstrap Bundle JS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_bundle" name="bootstrap_bundle" placeholder="https://39363.org/CDN/bootstrap.bundle.min.js"><br>
-		<br>
+		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br></br>
 		<input type="submit">
 	</form>
+	<script type="text/javascript">
+		function on_submit() {{
+			let form = document.getElementById( "our-form" );
+			let hex_color = form.elements[ "background_color" ].value || "0070C0";
+			let form_action = "/host/stage/1/" + hex_color;
+			console.log( form_action );
+			form.action = form_action;
+			form.submit();
+		}}
+	</script>
 </body>
 </html>''')
-@app.post( "/host/stage/1" , stream=True )
-async def host_upload_stage_1( request ):
+# <span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
+# <span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
+# <span>Exported Slide Image DPI</span>&nbsp&nbsp<input type="text" id="exported_image_dpi" name="exported_image_dpi" placeholder="144"><br>
+# <span>Scale Percentage of Image</span>&nbsp&nbsp<input type="text" id="image_scale_percentage" name="image_scale_percentage" placeholder="60"><br>
+# <span>Unanswered Color Outline</span>&nbsp&nbsp<input type="text" id="unanswered_color" name="unanswered_color" placeholder="red"><br>
+# <span>Answered Color Outline</span>&nbsp&nbsp<input type="text" id="answered_color" name="answered_color" placeholder="#13E337"><br>
+# <span>Typing Text Color</span>&nbsp&nbsp<input type="text" id="text_color" name="text_color" placeholder="white"><br>
+# <span>Typing Text Font</span>&nbsp&nbsp<input type="text" id="text_font" name="text_font" placeholder="17px Arial"><br>
+# <span>Typing Text X-Offset</span>&nbsp&nbsp<input type="text" id="text_x_offset_factor" name="text_x_offset_factor" placeholder="2"><br>
+# <span>Typing Text Y-Offset</span>&nbsp&nbsp<input type="text" id="text_y_offset_factor" name="text_y_offset_factor" placeholder="3"><br>
+# <span>Base URL of Hosted HTML</span>&nbsp&nbsp<input type="text" size="60" id="base_hosted_url" name="base_hosted_url" placeholder="https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive"><br>
+# <span>CDN of Interactive Typing JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_typing_js" name="interactive_typing_js" placeholder="https://39363.org/CDN/NOTES/interactive_typing.js"><br>
+# <span>CDN of Interactive DragAndDrop JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_drag_and_drop_js" name="interactive_drag_and_drop_js" placeholder="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"><br>
+# <span>CDN of JQuery-UI CSS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_css" name="jquery_ui_css" placeholder="https://39363.org/CDN/jquery-ui.css"><br>
+# <span>CDN of JQuery-UI JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_js" name="jquery_ui_js" placeholder="https://39363.org/CDN/jquery-ui.min.js"><br>
+# <span>CDN of JQuery JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_js" name="jquery_js" placeholder="https://39363.org/CDN/jquery-3.6.0.min.js"><br>
+# <span>CDN of Bootstrap CSS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_css" name="bootstrap_css" placeholder="https://39363.org/CDN/bootstrap.min.css"><br>
+# <span>CDN of Bootstrap Bundle JS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_bundle" name="bootstrap_bundle" placeholder="https://39363.org/CDN/bootstrap.bundle.min.js"><br>
+
+
+@app.post( "/host/stage/1/<hc:str>" , stream=True )
+async def host_upload_stage_1( request , hc:str ):
 	try:
+		# print( request )
+		# print( vars( request ) )
+		# print( hc )
+		# print( type( hc ) )
 
 		config = get_updated_config( request )
+		if hc != None:
+			config[ "parser" ][ "our_background_textbox_hex" ] = hc
 
 		# 1.) Injest octet-stream
 		start_time = datetime.datetime.now().astimezone( time_zone )
@@ -253,37 +274,52 @@ async def host_upload_stage_2( request: Request ):
 		<li>Create .zip archive of the orginal .pptx you uploaded in Stage 1 and the folder of jpegs it just generated</li>
 		<li>Upload that .zip file here</a></li>
 	</ol>
-	<form enctype="multipart/form-data" action="/host/stage/2" method="POST">
+	<form id="our-form" enctype="multipart/form-data" action="/host/stage/2" method="POST" onsubmit="on_submit();">
 		<input type="file" id="powerpoint" name="file"><br><br>
 		<span>Textbox Background Color (Hex)</span>&nbsp&nbsp<input type="text" id="background_color" name="background_color" placeholder="0070C0"><br>
-		<span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
-		<span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
-		<span>Exported Slide Image DPI</span>&nbsp&nbsp<input type="text" id="exported_image_dpi" name="exported_image_dpi" placeholder="144"><br>
-		<span>Scale Percentage of Image</span>&nbsp&nbsp<input type="text" id="image_scale_percentage" name="image_scale_percentage" placeholder="60"><br>
-		<span>Unanswered Color Outline</span>&nbsp&nbsp<input type="text" id="unanswered_color" name="unanswered_color" placeholder="red"><br>
-		<span>Answered Color Outline</span>&nbsp&nbsp<input type="text" id="answered_color" name="answered_color" placeholder="#13E337"><br>
-		<span>Typing Text Color</span>&nbsp&nbsp<input type="text" id="text_color" name="text_color" placeholder="white"><br>
-		<span>Typing Text Font</span>&nbsp&nbsp<input type="text" id="text_font" name="text_font" placeholder="17px Arial"><br>
-		<span>Typing Text X-Offset</span>&nbsp&nbsp<input type="text" id="text_x_offset_factor" name="text_x_offset_factor" placeholder="2"><br>
-		<span>Typing Text Y-Offset</span>&nbsp&nbsp<input type="text" id="text_y_offset_factor" name="text_y_offset_factor" placeholder="3"><br>
-		<span>Base URL of Hosted HTML</span>&nbsp&nbsp<input type="text" size="60" id="base_hosted_url" name="base_hosted_url" placeholder="https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive"><br>
-		<span>CDN of Interactive Typing JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_typing_js" name="interactive_typing_js" placeholder="https://39363.org/CDN/NOTES/interactive_typing.js"><br>
-		<span>CDN of Interactive DragAndDrop JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_drag_and_drop_js" name="interactive_drag_and_drop_js" placeholder="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"><br>
-		<span>CDN of JQuery-UI CSS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_css" name="jquery_ui_css" placeholder="https://39363.org/CDN/jquery-ui.css"><br>
-		<span>CDN of JQuery-UI JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_js" name="jquery_ui_js" placeholder="https://39363.org/CDN/jquery-ui.min.js"><br>
-		<span>CDN of JQuery JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_js" name="jquery_js" placeholder="https://39363.org/CDN/jquery-3.6.0.min.js"><br>
-		<span>CDN of Bootstrap CSS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_css" name="bootstrap_css" placeholder="https://39363.org/CDN/bootstrap.min.css"><br>
-		<span>CDN of Bootstrap Bundle JS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_bundle" name="bootstrap_bundle" placeholder="https://39363.org/CDN/bootstrap.bundle.min.js"><br>
-		<br>
+		<br></br>
 		<input type="submit">
 	</form>
+	<script type="text/javascript">
+		function on_submit() {{
+			let form = document.getElementById( "our-form" );
+			let hex_color = form.elements[ "background_color" ].value || "0070C0";
+			let form_action = "/host/stage/2/" + hex_color;
+			console.log( form_action );
+			form.action = form_action;
+			form.submit();
+		}}
+	</script>
 </body>
 </html>''')
-@app.post( "/host/stage/2" , stream=True )
-async def host_upload_stage_2( request ):
+# <span>Exported Slide Image Width</span>&nbsp&nbsp<input type="text" id="exported_width" name="exported_width" placeholder="1920"><br>
+# <span>Exported Slide Image Height</span>&nbsp&nbsp<input type="text" id="exported_height" name="exported_height" placeholder="1080"><br>
+# <span>Exported Slide Image DPI</span>&nbsp&nbsp<input type="text" id="exported_image_dpi" name="exported_image_dpi" placeholder="144"><br>
+# <span>Scale Percentage of Image</span>&nbsp&nbsp<input type="text" id="image_scale_percentage" name="image_scale_percentage" placeholder="60"><br>
+# <span>Unanswered Color Outline</span>&nbsp&nbsp<input type="text" id="unanswered_color" name="unanswered_color" placeholder="red"><br>
+# <span>Answered Color Outline</span>&nbsp&nbsp<input type="text" id="answered_color" name="answered_color" placeholder="#13E337"><br>
+# <span>Typing Text Color</span>&nbsp&nbsp<input type="text" id="text_color" name="text_color" placeholder="white"><br>
+# <span>Typing Text Font</span>&nbsp&nbsp<input type="text" id="text_font" name="text_font" placeholder="17px Arial"><br>
+# <span>Typing Text X-Offset</span>&nbsp&nbsp<input type="text" id="text_x_offset_factor" name="text_x_offset_factor" placeholder="2"><br>
+# <span>Typing Text Y-Offset</span>&nbsp&nbsp<input type="text" id="text_y_offset_factor" name="text_y_offset_factor" placeholder="3"><br>
+# <span>Base URL of Hosted HTML</span>&nbsp&nbsp<input type="text" size="60" id="base_hosted_url" name="base_hosted_url" placeholder="https://39363.org/NOTES/WSU/2021/Fall/ANT3100/Interactive"><br>
+# <span>CDN of Interactive Typing JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_typing_js" name="interactive_typing_js" placeholder="https://39363.org/CDN/NOTES/interactive_typing.js"><br>
+# <span>CDN of Interactive DragAndDrop JS</span>&nbsp&nbsp<input type="text" size="60" id="interactive_drag_and_drop_js" name="interactive_drag_and_drop_js" placeholder="https://39363.org/CDN/NOTES/interactive_drag_and_drop.js"><br>
+# <span>CDN of JQuery-UI CSS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_css" name="jquery_ui_css" placeholder="https://39363.org/CDN/jquery-ui.css"><br>
+# <span>CDN of JQuery-UI JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_ui_js" name="jquery_ui_js" placeholder="https://39363.org/CDN/jquery-ui.min.js"><br>
+# <span>CDN of JQuery JS</span>&nbsp&nbsp<input type="text" size="60" id="jquery_js" name="jquery_js" placeholder="https://39363.org/CDN/jquery-3.6.0.min.js"><br>
+# <span>CDN of Bootstrap CSS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_css" name="bootstrap_css" placeholder="https://39363.org/CDN/bootstrap.min.css"><br>
+# <span>CDN of Bootstrap Bundle JS</span>&nbsp&nbsp<input type="text" size="60" id="bootstrap_bundle" name="bootstrap_bundle" placeholder="https://39363.org/CDN/bootstrap.bundle.min.js"><br>
+
+
+@app.post( "/host/stage/2/<hc:str>" , stream=True )
+async def host_upload_stage_2( request , hc: str ):
 	try:
 
+		# So somehow "streams" in sanic the form get stripped , so this is temporary solution
 		config = get_updated_config( request )
+		if hc != None:
+			config[ "parser" ][ "our_background_textbox_hex" ] = hc
 
 		# 1.) Injest octet-stream
 		start_time = datetime.datetime.now().astimezone( time_zone )
