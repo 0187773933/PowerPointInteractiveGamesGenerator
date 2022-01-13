@@ -56,7 +56,7 @@ function start_interactive_drag_and_drop_blob() {
 			width_scale_percentage = ( image_scale_percentage / 100 );
 			height_scale_percentage = ( image_scale_percentage / 100 );
 
-			image_source_url = `/test/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
+			image_source_url = `/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
 			scaled_x = 0;
 			scaled_y = 0;
 			fetch( image_source_url ).then( function( response ) {
@@ -265,6 +265,25 @@ function start_interactive_drag_and_drop_blob() {
 			});
 
 		}
+
+		// let hint_button = document.getElementById( "hint-button" );
+		// let next_button_html = `&nbsp;<button class="btn btn-outline-secondary" type="button" id="next-button">Next</button>`;
+		// hint_button.insertAdjacentHTML( "afterend" , next_button_html );
+		// document.getElementById( "next-button" ).addEventListener( "click" , function () {
+		// 	//window.location.href = next_challenge_url;
+		// 	window.CURRENT_SLIDE_INDEX += 1;
+		// 	if ( window.CURRENT_SLIDE_INDEX < window.blob[ "slide_objects" ].length ) {
+		// 		load_current_slide_image_object();
+		// 	}
+		// });
+		// let previous_button_html = `&nbsp;<button class="btn btn-outline-secondary" type="button" id="previous-button">Previous</button>`;
+		// hint_button.insertAdjacentHTML( "afterend" , previous_button_html );
+		// document.getElementById( "previous-button" ).addEventListener( "click" , function () {
+		// 	//window.location.href = next_challenge_url;
+		// 	window.CURRENT_SLIDE_INDEX -= 1;
+		// 	if ( window.CURRENT_SLIDE_INDEX < 0 ) { window.CURRENT_SLIDE_INDEX = 0; }
+		// 	load_current_slide_image_object();
+		// });
 
 	}
 	init();

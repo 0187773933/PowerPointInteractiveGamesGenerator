@@ -58,7 +58,7 @@ function start_interactive_typing_blob() {
 			height_scale_percentage = ( image_scale_percentage / 100 );
 			drawn_correct_indexes = {};
 
-			image_source_url = `/test/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
+			image_source_url = `/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
 			scaled_x = 0;
 			scaled_y = 0;
 			fetch( image_source_url ).then( function( response ) {
@@ -66,7 +66,7 @@ function start_interactive_typing_blob() {
 				} else { return Promise.reject( response ); }
 			}).then( function( data ) {
 				if ( !data[ "image_b64_string" ] ) { return false; }
-				console.log( data[ "image_b64_string" ] );
+				// console.log( data[ "image_b64_string" ] );
 				canvas = document.getElementById( "interactive-image-canvas" );
 				context = canvas.getContext( "2d" );
 				image = new Image();
@@ -184,7 +184,7 @@ function start_interactive_typing_blob() {
 				});
 				// draw_rectangle( ...translated_rec_coordinates );
 			}
-			console.log( window.rectangle_objects );
+			// console.log( window.rectangle_objects );
 			// console.log( canvas );
 			canvas.addEventListener( "click" , function( event ) {
 				let mouse_translated_x = ( event.clientX - canvas.offsetLeft );
@@ -193,7 +193,7 @@ function start_interactive_typing_blob() {
 				for ( let i = 0; i < window.rectangle_objects.length; ++i ) {
 					let inside_rectangle = is_point_inside_rectangle( mouse_translated_x , mouse_translated_y , window.rectangle_objects[ i ].translated_coordinates );
 					if ( inside_rectangle ) {
-						console.log( `we clicked inside object ${window.rectangle_objects[ i ].area.alt}` , window.rectangle_objects[ i ] );
+						// console.log( `we clicked inside object ${window.rectangle_objects[ i ].area.alt}` , window.rectangle_objects[ i ] );
 						return;
 					}
 				}
@@ -260,14 +260,14 @@ function start_interactive_typing_blob() {
 			answer_input_element.addEventListener( "keyup" , function( event ) {
 				let input_text = this.value.toLowerCase();
 				if ( active_rectangle_index in drawn_correct_indexes ) {
-					console.log( "already answered from anywhere position" );
+					// console.log( "already answered from anywhere position" );
 					while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
 						active_rectangle_index += 1;
-						console.log( active_rectangle_index );
+						// console.log( active_rectangle_index );
 					}
 				}
-				console.log( window.rectangle_objects );
-				console.log( active_rectangle_index );
+				// console.log( window.rectangle_objects );
+				// console.log( active_rectangle_index );
 				if ( active_rectangle_index === window.rectangle_objects.length ) { active_rectangle_index -= 1; }
 				let correct_value = window.rectangle_objects[ active_rectangle_index ].area.alt.toLowerCase();
 				if ( input_text === correct_value ) {
@@ -276,13 +276,13 @@ function start_interactive_typing_blob() {
 					draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
 					add_text_to_area( window.rectangle_objects[ active_rectangle_index ] );
 					drawn_correct_indexes[ active_rectangle_index ] = 1;
-					console.log( drawn_correct_indexes );
+					// console.log( drawn_correct_indexes );
 					active_rectangle_index += 1;
 					if ( active_rectangle_index in drawn_correct_indexes ) {
-						console.log( "already answered from anywhere position" );
+						// console.log( "already answered from anywhere position" );
 						while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
 							active_rectangle_index += 1;
-							console.log( active_rectangle_index );
+							// console.log( active_rectangle_index );
 						}
 					}
 					if ( active_rectangle_index === total_rectangles ) {
@@ -305,15 +305,15 @@ function start_interactive_typing_blob() {
 						potential_correct_values.forEach( ( x , i ) => { pcv[ x ] = i } );
 						if ( input_text in pcv ) {
 							if ( pcv[ input_text ] in drawn_correct_indexes ) { return; }
-							console.log( "correct answer for anywhere position" );
+							// console.log( "correct answer for anywhere position" );
 							this.value = "";
 							hint_area_element.innerText = "";
 							active_index = pcv[ input_text ]
-							console.log( active_index );
+							// console.log( active_index );
 							draw_rectangle( ...window.rectangle_objects[ active_index ].translated_coordinates , answered_color );
 							add_text_to_area( window.rectangle_objects[ active_index ] );
 							drawn_correct_indexes[ active_index ] = 1;
-							console.log( drawn_correct_indexes );
+							// console.log( drawn_correct_indexes );
 							if ( active_index === total_rectangles ) {
 								// if ( next_challenge_url ) {
 								// 	if ( auto_advance ) {
@@ -342,20 +342,20 @@ function start_interactive_typing_blob() {
 						if ( time_since_last_control_z < control_z_cooloff ) { return; }
 						let time_since_last_control = ( ( time_now - time_last_control ) / 1000 );
 						if ( time_since_last_control > control_cooloff ) { return; }
-						console.log( `Control + Z === ${time_now} === ${time_since_last_control_z}` );
+						// console.log( `Control + Z === ${time_now} === ${time_since_last_control_z}` );
 						time_last_control_z = time_now;
 						this.value = "";
 						hint_area_element.innerText = "";
 						draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
 						add_text_to_area( window.rectangle_objects[ active_rectangle_index ] );
 						drawn_correct_indexes[ active_rectangle_index ] = 1;
-						console.log( drawn_correct_indexes );
+						// console.log( drawn_correct_indexes );
 						active_rectangle_index += 1;
 						if ( active_rectangle_index in drawn_correct_indexes ) {
-							console.log( "already answered from anywhere position" );
+							// console.log( "already answered from anywhere position" );
 							while( ( active_rectangle_index in drawn_correct_indexes ) === true ) {
 								active_rectangle_index += 1;
-								console.log( active_rectangle_index );
+								// console.log( active_rectangle_index );
 							}
 						}
 						if ( active_rectangle_index === total_rectangles ) {
@@ -386,14 +386,26 @@ function start_interactive_typing_blob() {
 			answer_input_element.focus();
 			answer_input_element.setSelectionRange( answer_input_element.value.length , answer_input_element.value.length , "forward" );
 		}
-		if ( next_challenge_url ) {
-			let hint_button = document.getElementById( "hint-button" );
-			let next_button_html = `&nbsp;<button class="btn btn-outline-secondary" type="button" id="next-button">Next</button>`;
-			hint_button.insertAdjacentHTML( "afterend" , next_button_html );
-			document.getElementById( "next-button" ).addEventListener( "click" , function () {
-				window.location.href = next_challenge_url;
-			});
-		}
+
+		let hint_button = document.getElementById( "hint-button" );
+		let next_button_html = `&nbsp;<button class="btn btn-outline-secondary" type="button" id="next-button">Next</button>`;
+		hint_button.insertAdjacentHTML( "afterend" , next_button_html );
+		document.getElementById( "next-button" ).addEventListener( "click" , function () {
+			//window.location.href = next_challenge_url;
+			window.CURRENT_SLIDE_INDEX += 1;
+			if ( window.CURRENT_SLIDE_INDEX < window.blob[ "slide_objects" ].length ) {
+				load_current_slide_image_object();
+			}
+		});
+		let previous_button_html = `&nbsp;<button class="btn btn-outline-secondary" type="button" id="previous-button">Previous</button>`;
+		hint_button.insertAdjacentHTML( "afterend" , previous_button_html );
+		document.getElementById( "previous-button" ).addEventListener( "click" , function () {
+			//window.location.href = next_challenge_url;
+			window.CURRENT_SLIDE_INDEX -= 1;
+			if ( window.CURRENT_SLIDE_INDEX < 0 ) { window.CURRENT_SLIDE_INDEX = 0; }
+			load_current_slide_image_object();
+		});
+
 	}
 	init();
 }
