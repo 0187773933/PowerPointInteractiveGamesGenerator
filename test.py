@@ -577,8 +577,22 @@ async def local( request: Request , ulid: str ):
 			return sanic_json( dict( failed="nothing sealed" ) , status=200 )
 		opened_base64 = utils.secret_box_open( decoded[ "key" ] , encrypted_json[ "sealed" ] )
 		image_bytes = base64.b64decode( opened_base64 )
+
+		# Option 1.) Raw Bytes
 		# https://github.com/sanic-org/sanic/blob/main/sanic/response.py#L248
-		return sanic_raw( image_bytes , status=200 , headers={ "Content-Type": "image/jpeg" } )
+		# return sanic_raw( image_bytes , status=200 , headers={ "Content-Type": "image/jpeg" } )
+
+		# Option 2.) Write Bytes to Temp File and Send
+		# with tempfile.TemporaryDirectory() as temp_dir:
+		# 	temp_dir_posix = Path( temp_dir )
+		# 	with tempfile.NamedTemporaryFile( suffix='.jpeg' , prefix=temp_dir ) as tf:
+		# 		temp_file_path = temp_dir_posix.joinpath( tf.name )
+		# 		with open( str( temp_file_path ) , 'wb' ) as f:
+		# 			f.write( image_bytes )
+		# 		return await sanic_file( str( temp_file_path ) )
+
+		# Option 3.) Send Base64 String?
+		return sanic_json( dict( image_b64_string=opened_base64 ) , status=200 )
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )

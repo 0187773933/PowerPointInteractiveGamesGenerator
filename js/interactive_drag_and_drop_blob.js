@@ -31,28 +31,57 @@ function start_interactive_drag_and_drop_blob() {
 		let scaled_y;
 
 		function load_current_slide_image_object() {
-			let canvas = document.getElementById( "interactive-image-canvas" );
-			let context = canvas.getContext( "2d" );
-			let image = new Image();
-			let scaled_x = 0;
-			let scaled_y = 0;
-			image.addEventListener( "load" , function() {
-				// idk man
-				// https://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly#19262385
-				scaled_x = ( image.width * width_scale_percentage );
-				scaled_y = ( image.height * height_scale_percentage );
-				canvas.width = scaled_x;
-				canvas.height = scaled_y;
-				context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
-				add_areas();
-			});
-			// https://www.image-map.net/
-			image.src = image_source_url;
-		}
-		console.log( window.blob );
-		console.log( window.CURRENT_SLIDE_INDEX );
-		load_current_slide_image_object();
 
+			let self = window.blob[ "slide_objects" ][ window.CURRENT_SLIDE_INDEX ];
+			try{ $( "#draggable-label-container" ).empty(); }
+			catch( e ) {}
+			$( "#image-map-container" ).empty();
+			$( "#draggable-label-container" ).empty();
+			$( "#draggable-label-container" ).html( "<span></span>" );
+			$( ".text-box-label" ).each( function() {
+     		   $(this).remove();
+			});
+			$( "#image-map-container" ).html( self[ "image_map" ] );
+			$( "#interactive-image-canvas" ).empty();
+
+			image_source_url = window.image_source_url;
+			image_scale_percentage = window.image_scale_percentage;
+			unanswered_color = window.unanswered_color;
+			answered_color = window.answered_color;
+			text_color = window.text_color;
+			text_font = window.text_font;
+			text_x_offset_factor = window.text_x_offset_factor;
+			text_y_offset_factor = window.text_y_offset_factor;
+			next_challenge_url = window.next_challenge_url;
+			width_scale_percentage = ( image_scale_percentage / 100 );
+			height_scale_percentage = ( image_scale_percentage / 100 );
+
+			image_source_url = `/test/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
+			scaled_x = 0;
+			scaled_y = 0;
+			fetch( image_source_url ).then( function( response ) {
+				if ( response.ok ) { return response.json();
+				} else { return Promise.reject( response ); }
+			}).then( function( data ) {
+				if ( !data[ "image_b64_string" ] ) { return false; }
+				console.log( data[ "image_b64_string" ] );
+				canvas = document.getElementById( "interactive-image-canvas" );
+				context = canvas.getContext( "2d" );
+				image = new Image();
+				image.addEventListener( "load" , function() {
+					scaled_x = ( image.width * width_scale_percentage );
+					scaled_y = ( image.height * height_scale_percentage );
+					canvas.width = scaled_x;
+					canvas.height = scaled_y;
+					context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
+					add_areas();
+				});
+				image.src = `data:image/jpeg;base64,${data[ "image_b64_string" ]}`;
+			}).catch( function( err ) {
+				console.log( err );
+			});
+		}
+		load_current_slide_image_object();
 
 		function draw_line( x1 , y1 , x2 , y2 ) {
 			context.beginPath();
@@ -219,8 +248,10 @@ function start_interactive_drag_and_drop_blob() {
 								draw_rectangle( ...rectangle_objects[ i ].translated_coordinates , answered_color );
 								active_rectangle_index += 1;
 								if ( active_rectangle_index === total_rectangles ) {
-									if ( next_challenge_url ) {
-										window.location.href = next_challenge_url;
+									// window.location.href = next_challenge_url;
+									window.CURRENT_SLIDE_INDEX += 1;
+									if ( window.CURRENT_SLIDE_INDEX < window.blob[ "slide_objects" ].length ) {
+										load_current_slide_image_object();
 									}
 								}
 							}

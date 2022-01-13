@@ -62,8 +62,24 @@ def build_drag_and_drop_blob_html( options ):
 	<script type="text/javascript">
 		window.blob = {options["blob"]};
 		window.CURRENT_SLIDE_INDEX = 0;
+		let test_1 = window.location.href.split( "?t=" );
+		if ( test_1 ) {{
+			if ( test_1.length > 1 ) {{
+				window.token = test_1[ 1 ];
+			}}
+		}}
 	</script>
 	<script type="text/javascript">
+		window.image_scale_percentage = {options["image_scale_percentage"]};
+		window.unanswered_color = "{options["unanswered_color"]}";
+		window.answered_color = "{options["answered_color"]}";
+		window.text_color = "{options["text_color"]}";
+		window.text_font = "{options["text_font"]}";
+		window.text_x_offset_factor = {options["text_x_offset_factor"]};
+		window.text_y_offset_factor = {options["text_y_offset_factor"]};
+		window.any_position = {str( options["any_position"] ).lower()};
+		window.randomize_order = {str( options["randomize_order"] ).lower()};
+		window.auto_advance = {str( options["auto_advance"] ).lower()};
 		function load() {{ start_interactive_drag_and_drop_blob(); }}
 		let interactive_drag_and_drop_script = document.createElement( "script" );
 		interactive_drag_and_drop_script.setAttribute( "src" , "{options["cdn"]["interactive_drag_and_drop_js"]}?v=" + ( new Date() ).getTime() );
