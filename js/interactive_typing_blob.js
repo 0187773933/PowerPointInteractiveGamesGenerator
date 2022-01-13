@@ -1,4 +1,4 @@
-function start_interactive_typing() {
+function start_interactive_typing_blob() {
 	// window.addEventListener( "scroll" , function() {
 	// 	window.scrollTo( 0 , 0 );
 	// });
@@ -11,43 +11,79 @@ function start_interactive_typing() {
 	// https://www.w3schools.com/tags/att_area_coords.asp
 	function init() {
 
-		let image_source_url = window.image_source_url;
-		let image_scale_percentage = window.image_scale_percentage;
-		let unanswered_color = window.unanswered_color;
-		let answered_color = window.answered_color;
-		let text_color = window.text_color;
-		let text_font = window.text_font;
-		let text_x_offset_factor = window.text_x_offset_factor;
-		let text_y_offset_factor = window.text_y_offset_factor;
-		let next_challenge_url = window.next_challenge_url;
-		let randomize_order = true;
-		let auto_advance = true;
-		let any_position = false;
+		let image_source_url;
+		let image_scale_percentage;
+		let unanswered_color;
+		let answered_color;
+		let text_color;
+		let text_font;
+		let text_x_offset_factor;
+		let text_y_offset_factor;
+		let next_challenge_url;
+
+		let width_scale_percentage;
+		let height_scale_percentage;
+
+		let canvas;
+		let context;
+		let image;
+		let scaled_x;
+		let scaled_y;
 		let drawn_correct_indexes = {};
-		if ( typeof window.randomize_order != "undefined" ) { randomize_order = window.randomize_order; }
-		if ( typeof window.auto_advance != "undefined" ) { auto_advance = window.auto_advance; }
-		if ( typeof window.any_position != "undefined" ) { any_position = window.any_position; }
 
-		let width_scale_percentage = ( image_scale_percentage / 100 );
-		let height_scale_percentage = ( image_scale_percentage / 100 );
+		function load_current_slide_image_object() {
 
-		let canvas = document.getElementById( "interactive-image-canvas" );
-		let context = canvas.getContext( "2d" );
-		let image = new Image();
-		let scaled_x = 0;
-		let scaled_y = 0;
-		image.addEventListener( "load" , function() {
-			// idk man
-			// https://stackoverflow.com/questions/19262141/resize-image-with-javascript-canvas-smoothly#19262385
-			scaled_x = ( image.width * width_scale_percentage );
-			scaled_y = ( image.height * height_scale_percentage );
-			canvas.width = scaled_x;
-			canvas.height = scaled_y;
-			context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
-			add_areas();
-		});
-		// https://www.image-map.net/
-		image.src = image_source_url;
+			let self = window.blob[ "slide_objects" ][ window.CURRENT_SLIDE_INDEX ];
+			try{ $( "#draggable-label-container" ).empty(); }
+			catch( e ) {}
+			$( "#image-map-container" ).empty();
+			$( "#draggable-label-container" ).empty();
+			$( "#draggable-label-container" ).html( "<span></span>" );
+			$( ".text-box-label" ).each( function() {
+     		   $(this).remove();
+			});
+			$( "#image-map-container" ).html( self[ "image_map" ] );
+			$( "#interactive-image-canvas" ).empty();
+
+			image_source_url = window.image_source_url;
+			image_scale_percentage = window.image_scale_percentage;
+			unanswered_color = window.unanswered_color;
+			answered_color = window.answered_color;
+			text_color = window.text_color;
+			text_font = window.text_font;
+			text_x_offset_factor = window.text_x_offset_factor;
+			text_y_offset_factor = window.text_y_offset_factor;
+			next_challenge_url = window.next_challenge_url;
+			width_scale_percentage = ( image_scale_percentage / 100 );
+			height_scale_percentage = ( image_scale_percentage / 100 );
+			drawn_correct_indexes = {};
+
+			image_source_url = `/test/host/image/${self[ "image_ulid" ]}?t=${window.token}`;
+			scaled_x = 0;
+			scaled_y = 0;
+			fetch( image_source_url ).then( function( response ) {
+				if ( response.ok ) { return response.json();
+				} else { return Promise.reject( response ); }
+			}).then( function( data ) {
+				if ( !data[ "image_b64_string" ] ) { return false; }
+				console.log( data[ "image_b64_string" ] );
+				canvas = document.getElementById( "interactive-image-canvas" );
+				context = canvas.getContext( "2d" );
+				image = new Image();
+				image.addEventListener( "load" , function() {
+					scaled_x = ( image.width * width_scale_percentage );
+					scaled_y = ( image.height * height_scale_percentage );
+					canvas.width = scaled_x;
+					canvas.height = scaled_y;
+					context.drawImage( image , 0 , 0 , scaled_x , scaled_y );
+					add_areas();
+				});
+				image.src = `data:image/jpeg;base64,${data[ "image_b64_string" ]}`;
+			}).catch( function( err ) {
+				console.log( err );
+			});
+		}
+		load_current_slide_image_object();
 
 		function draw_line( x1 , y1 , x2 , y2 ) {
 			context.beginPath();
@@ -134,13 +170,13 @@ function start_interactive_typing() {
 
 			// Setup Area Rectangles
 			let areas = document.querySelectorAll( "area" );
-			let rectangle_objects = [];
+			window.rectangle_objects = [];
 			for ( let i = 0; i < areas.length; ++i ) {
 				let translated_rec_coordinates = translate_raw_rectangle_coordinates_to_ordered( areas[ i ].getAttribute( "coords" ) );
 				let id = areas[ i ].alt.toLowerCase().replace( /\s+/g , '-' );
 				let font = areas[ i ].getAttribute( "font" );
 				if ( font === null ) { font = text_font; }
-				rectangle_objects.push({
+				window.rectangle_objects.push({
 					area: areas[ i ] ,
 					id: id ,
 					translated_coordinates: translated_rec_coordinates ,
@@ -148,16 +184,16 @@ function start_interactive_typing() {
 				});
 				// draw_rectangle( ...translated_rec_coordinates );
 			}
-			// console.log( rectangle_objects );
+			console.log( window.rectangle_objects );
 			// console.log( canvas );
 			canvas.addEventListener( "click" , function( event ) {
 				let mouse_translated_x = ( event.clientX - canvas.offsetLeft );
 				let mouse_translated_y = ( event.clientY - canvas.offsetTop );
 				// draw_circle_at_point( mouse_translated_x , mouse_translated_y );
-				for ( let i = 0; i < rectangle_objects.length; ++i ) {
-					let inside_rectangle = is_point_inside_rectangle( mouse_translated_x , mouse_translated_y , rectangle_objects[ i ].translated_coordinates );
+				for ( let i = 0; i < window.rectangle_objects.length; ++i ) {
+					let inside_rectangle = is_point_inside_rectangle( mouse_translated_x , mouse_translated_y , window.rectangle_objects[ i ].translated_coordinates );
 					if ( inside_rectangle ) {
-						console.log( `we clicked inside object ${rectangle_objects[ i ].area.alt}` , rectangle_objects[ i ] );
+						console.log( `we clicked inside object ${window.rectangle_objects[ i ].area.alt}` , window.rectangle_objects[ i ] );
 						return;
 					}
 				}
@@ -201,23 +237,23 @@ function start_interactive_typing() {
 			// Randomize Items
 			if ( randomize_order ) {
 				areas = shuffleArray( [ ...areas ] );
-				rectangle_objects = shuffleArray( rectangle_objects );
+				window.rectangle_objects = shuffleArray( window.rectangle_objects );
 			}
 
 			// Now we just have to highlight boxes/areas in order , and verify typed answer is right before moving on
 			let answer_input_element = document.getElementById( "input-answer" );
 			let active_rectangle_index = 0;
-			let total_rectangles = rectangle_objects.length;
+			let total_rectangles = window.rectangle_objects.length;
 			let time_now = new Date().getTime();
 			let time_last_control = new Date().getTime();
 			let time_last_control_z = new Date().getTime();
 			let control_cooloff = 1.0;
 			let control_z_cooloff = 1.0;
-			draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
+			draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 			let hint_button_element = document.getElementById( "hint-button" );
 			let hint_area_element = document.getElementById( "hint-area" );
 			hint_button_element.addEventListener( "click" , function( event ) {
-				hint_area_element.innerText = rectangle_objects[ active_rectangle_index ].area.alt;
+				hint_area_element.innerText = window.rectangle_objects[ active_rectangle_index ].area.alt;
 				answer_input_element.focus();
 				answer_input_element.select();
 			});
@@ -230,12 +266,15 @@ function start_interactive_typing() {
 						console.log( active_rectangle_index );
 					}
 				}
-				let correct_value = rectangle_objects[ active_rectangle_index ].area.alt.toLowerCase();
+				console.log( window.rectangle_objects );
+				console.log( active_rectangle_index );
+				if ( active_rectangle_index === window.rectangle_objects.length ) { active_rectangle_index -= 1; }
+				let correct_value = window.rectangle_objects[ active_rectangle_index ].area.alt.toLowerCase();
 				if ( input_text === correct_value ) {
 					this.value = "";
 					hint_area_element.innerText = "";
-					draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
-					add_text_to_area( rectangle_objects[ active_rectangle_index ] );
+					draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
+					add_text_to_area( window.rectangle_objects[ active_rectangle_index ] );
 					drawn_correct_indexes[ active_rectangle_index ] = 1;
 					console.log( drawn_correct_indexes );
 					active_rectangle_index += 1;
@@ -247,17 +286,21 @@ function start_interactive_typing() {
 						}
 					}
 					if ( active_rectangle_index === total_rectangles ) {
-						if ( next_challenge_url ) {
-							if ( auto_advance ) {
-								window.location.href = next_challenge_url;
-							}
+						// if ( next_challenge_url ) {
+						// 	if ( auto_advance ) {
+						// 		window.location.href = next_challenge_url;
+						// 	}
+						// }
+						window.CURRENT_SLIDE_INDEX += 1;
+						if ( window.CURRENT_SLIDE_INDEX < window.blob[ "slide_objects" ].length ) {
+							load_current_slide_image_object();
 						}
 					} else {
-						draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
+						draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 					}
 				} else {
 					//if ( any_position === true ) {
-						let potential_correct_values = rectangle_objects.map( ( x ) => { return x.area.alt.toLowerCase() } );
+						let potential_correct_values = window.rectangle_objects.map( ( x ) => { return x.area.alt.toLowerCase() } );
 						let pcv = {};
 						potential_correct_values.forEach( ( x , i ) => { pcv[ x ] = i } );
 						if ( input_text in pcv ) {
@@ -267,15 +310,19 @@ function start_interactive_typing() {
 							hint_area_element.innerText = "";
 							active_index = pcv[ input_text ]
 							console.log( active_index );
-							draw_rectangle( ...rectangle_objects[ active_index ].translated_coordinates , answered_color );
-							add_text_to_area( rectangle_objects[ active_index ] );
+							draw_rectangle( ...window.rectangle_objects[ active_index ].translated_coordinates , answered_color );
+							add_text_to_area( window.rectangle_objects[ active_index ] );
 							drawn_correct_indexes[ active_index ] = 1;
 							console.log( drawn_correct_indexes );
 							if ( active_index === total_rectangles ) {
-								if ( next_challenge_url ) {
-									if ( auto_advance ) {
-										window.location.href = next_challenge_url;
-									}
+								// if ( next_challenge_url ) {
+								// 	if ( auto_advance ) {
+								// 		window.location.href = next_challenge_url;
+								// 	}
+								// }
+								window.CURRENT_SLIDE_INDEX += 1;
+								if ( window.CURRENT_SLIDE_INDEX < window.blob[ "slide_objects" ].length ) {
+									load_current_slide_image_object();
 								}
 							}
 						}
@@ -299,8 +346,8 @@ function start_interactive_typing() {
 						time_last_control_z = time_now;
 						this.value = "";
 						hint_area_element.innerText = "";
-						draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
-						add_text_to_area( rectangle_objects[ active_rectangle_index ] );
+						draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , answered_color );
+						add_text_to_area( window.rectangle_objects[ active_rectangle_index ] );
 						drawn_correct_indexes[ active_rectangle_index ] = 1;
 						console.log( drawn_correct_indexes );
 						active_rectangle_index += 1;
@@ -318,7 +365,7 @@ function start_interactive_typing() {
 								}
 							}
 						} else {
-							draw_rectangle( ...rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
+							draw_rectangle( ...window.rectangle_objects[ active_rectangle_index ].translated_coordinates , unanswered_color );
 						}
 						return;
 					});
@@ -331,7 +378,7 @@ function start_interactive_typing() {
 				// console.log( event.ctrlKey , event.key , event.keyCode );
 				if ( event.key === "Control" && event.keyCode === 17 ) {
 					// console.log( "there" );
-					hint_area_element.innerText = rectangle_objects[ active_rectangle_index ].area.alt;
+					hint_area_element.innerText = window.rectangle_objects[ active_rectangle_index ].area.alt;
 					answer_input_element.focus();
 					answer_input_element.select();
 				}

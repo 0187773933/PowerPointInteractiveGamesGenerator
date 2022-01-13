@@ -673,17 +673,65 @@ async def local( request: Request ):
 		html_options[ "title" ] = blob[ "title" ]
 		html_options[ "blob" ] = blob
 
-		print( html_options )
-		# html_options[ "images" ] = image_objects
-		# html_options[ "output_base_dir" ] = output_html_path
-		# interactive_notes_generator.generate( html_options , False )
 		html = interactive_notes_generator.build_drag_and_drop_blob_html( html_options )
 		return sanic_html( html )
-		# return sanic_json( dict( testing="in progress" ) , status=200 )
 	except Exception as e:
 		print( e )
 		return sanic_json( dict( failed=str( e ) ) , status=200 )
 
+
+@app.route( "/test/host/Typing" , methods=[ "GET" ] )
+async def local( request: Request ):
+	try:
+		token = request.args.get( "t" )
+		if token == None:
+			return sanic_json( dict( failed="no token" ) , status=200 )
+		decoded = False
+		try:
+			decoded = jwt.decode(
+				token ,
+				# utils.base64_decode( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ) ,
+				DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "sanic_secret_key" ] ,
+				algorithm=DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "jwt_algorithm" ]
+			)
+		except Exception as decode_error:
+			print( decode_error )
+			return sanic_json( dict( failed=str( decode_error ) ) , status=200 )
+		if "blob_ulid" not in decoded:
+			return sanic_json( dict( failed="no blob ulid" ) , status=200 )
+		if "key" not in decoded:
+			return sanic_json( dict( failed="no key" ) , status=200 )
+		blob_file_path = Path( DEFAULT_CONFIG[ "image_upload_server_imgur_version" ][ "local_blob_storage_path" ] ).joinpath( f"{decoded[ 'blob_ulid' ]}.json" )
+		if blob_file_path.is_file() == False:
+			return sanic_json( dict( failed="file doesn't exist" ) , status=200 )
+		blob = utils.read_json( str( blob_file_path ) )
+		if "sealed" not in blob:
+			return sanic_json( dict( failed="nothing sealed ???" ) , status=200 )
+
+		opened_base64 = utils.secret_box_open( decoded[ "key" ] , blob[ "sealed" ] )
+		blob = json.loads( base64.b64decode( opened_base64 ) )
+		pprint( blob )
+
+		## Now just generate on-the-fly html for drag and drop , and send
+		## we are going to have to make a new version of interactive_drag_and_drop.js and interactive_typing.js
+		## so that they support the "blob" , and advance and previous work on arrrow keys
+		## images get pulled via ulids --> decrypt sealed image base64 string --> render
+		html_options = DEFAULT_CONFIG[ "html" ]
+		html_options[ "cdn" ][ "jquery_ui_css" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/css/jquery-ui.css"
+		html_options[ "cdn" ][ "jquery_ui_js" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/jquery-ui.min.js"
+		html_options[ "cdn" ][ "jquery_js" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/jquery-3.6.0.min.js"
+		html_options[ "cdn" ][ "bootstrap_css" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/css/bootstrap.min.css"
+		html_options[ "cdn" ][ "bootstrap_bundle" ][ "url" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/bootstrap.bundle.min.js"
+		html_options[ "cdn" ][ "interactive_typing_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_typing_blob.js"
+		html_options[ "cdn" ][ "interactive_drag_and_drop_js" ] = f"{html_options[ 'base_hosted_url' ]}/static/js/interactive_drag_and_drop_blob.js"
+		html_options[ "title" ] = blob[ "title" ]
+		html_options[ "blob" ] = blob
+
+		html = interactive_notes_generator.build_typing_blob_html( html_options )
+		return sanic_html( html )
+	except Exception as e:
+		print( e )
+		return sanic_json( dict( failed=str( e ) ) , status=200 )
 
 if __name__ == "__main__":
 	app.run( host="0.0.0.0" , port="9379" )

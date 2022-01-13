@@ -89,6 +89,76 @@ def build_drag_and_drop_blob_html( options ):
 </body>
 </html>'''
 
+def build_typing_blob_html( options ):
+	return f'''<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{options["title"]}</title>
+	<link rel="stylesheet" href="{options["cdn"]["jquery_ui_css"]["url"]}" integrity="{options["cdn"]["jquery_ui_css"]["integrity"]}" >
+	<script src="{options["cdn"]["jquery_js"]["url"]}" integrity="{options["cdn"]["jquery_js"]["integrity"]}"></script>
+	<link rel="stylesheet" href="{options["cdn"]["bootstrap_css"]["url"]}" integrity="{options["cdn"]["bootstrap_css"]["integrity"]}">
+	<script src="{options["cdn"]["bootstrap_bundle"]["url"]}" integrity="{options["cdn"]["bootstrap_bundle"]["integrity"]}"></script>
+	<script src="{options["cdn"]["jquery_ui_js"]["url"]}" integrity="{options["cdn"]["jquery_ui_js"]["integrity"]}" ></script>
+</head>
+<body>
+	<div id="image-map-container"></div>
+	<div>
+		<center><canvas id="interactive-image-canvas"></canvas></center>
+	</div>
+	</br>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<div class="input-group">
+					<span class="input-group-text" id="bootstrap-answer-companion">Answer</span>
+					<input autofocus id="input-answer" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="bootstrap-answer-companion">
+					<button class="btn btn-outline-secondary" type="button" id="hint-button">Hint</button>
+				</div>
+			</div>
+			<div class="col-2"></div>
+		</div>
+		</br>
+		<div class="row justify-content-center">
+			<div class="col-2"></div>
+			<div class="col-8">
+				<p id="hint-area" class="text-center"></p>
+			</div>
+			<div class="col-2"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		window.blob = {options["blob"]};
+		window.CURRENT_SLIDE_INDEX = 0;
+		let test_1 = window.location.href.split( "?t=" );
+		if ( test_1 ) {{
+			if ( test_1.length > 1 ) {{
+				window.token = test_1[ 1 ];
+			}}
+		}}
+	</script>
+	<script type="text/javascript">
+		window.image_scale_percentage = {options["image_scale_percentage"]};
+		window.unanswered_color = "{options["unanswered_color"]}";
+		window.answered_color = "{options["answered_color"]}";
+		window.text_color = "{options["text_color"]}";
+		window.text_font = "{options["text_font"]}";
+		window.text_x_offset_factor = {options["text_x_offset_factor"]};
+		window.text_y_offset_factor = {options["text_y_offset_factor"]};
+		window.any_position = {str( options["any_position"] ).lower()};
+		window.randomize_order = {str( options["randomize_order"] ).lower()};
+		window.auto_advance = {str( options["auto_advance"] ).lower()};
+		function load() {{ start_interactive_typing_blob(); }}
+		let interactive_typing_script = document.createElement( "script" );
+		interactive_typing_script.setAttribute( "src" , "{options["cdn"]["interactive_typing_js"]}?v=" + ( new Date() ).getTime() );
+		interactive_typing_script.onload = load;
+		document.head.appendChild( interactive_typing_script );
+	</script>
+</body>
+</html>'''
+
 def build_drag_and_drop_html( options ):
 	return f'''<!DOCTYPE html>
 <html>
