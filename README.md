@@ -24,7 +24,7 @@ sudo docker run -dit --restart="always" --name "public-ppt-interactive-generator
 
 1. Run `python3 01_prepare_powerpoint.py input.pptx config.json`
 2. Export input.pptx as JPEGS
-4. Run `python3 02_upload_and_generate_powerpoint.py input-Blank.pptx config.json`
+4. Run `python3 02_upload_and_generate_powerpoint.py input.pptx config.json`
 
 ### Result
 

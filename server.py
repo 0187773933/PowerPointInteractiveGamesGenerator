@@ -258,7 +258,6 @@ async def host_upload_stage_1( request , hc:str ):
 @app.route( "/host/stage/2" , methods=[ "GET" ] )
 async def host_upload_stage_2( request: Request ):
 	return sanic_html( f'''<!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
