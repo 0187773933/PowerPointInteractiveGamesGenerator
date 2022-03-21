@@ -337,6 +337,6 @@ def compute( input_path , options ):
 			})
 			shape_object[ 0 ][ "html_map_string" ] = f'{shape_object[ 0 ][ "html_map_results" ][ "image_map" ][ "translated" ][ 0 ]},{shape_object[ 0 ][ "html_map_results" ][ "image_map" ][ "translated" ][ 1 ]},{shape_object[ 0 ][ "html_map_results" ][ "image_map" ][ "translated" ][ 2 ]},{shape_object[ 0 ][ "html_map_results" ][ "image_map" ][ "translated" ][ 3 ]}'
 			html_map_string += f'\t\t\t<area target="" alt="{shape_object[ 0 ][ "text" ]}" title="{shape_object[ 0 ][ "text" ]}" href="" coords="{shape_object[ 0 ][ "html_map_string" ]}" shape="rect">\n'
-		html_map_string += f'\t\t</map>\n'
+		html_map_string += f'\t\t</map>'
 		image_maps.append( html_map_string )
 	return image_maps
