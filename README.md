@@ -2,7 +2,7 @@
 > Generates Drag-And-Drop and Typing Prompt Games from Placeholder Textboxes
 
 ## Local Generation - Docker Hub
-- https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-serverA
+- https://hub.docker.com/r/xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server
 1. Run `sudo docker pull xp6qhg9fmuolztbd2ixwdbtd1/ppt-interactive-generator-server`
 2. Run :
 ```
